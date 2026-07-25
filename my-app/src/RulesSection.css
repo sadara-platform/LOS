@@ -1,0 +1,249 @@
+/* Rules Section 3D Container */
+.rules-section-3d {
+  position: relative;
+  z-index: 10;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 0;
+  background: transparent;
+  overflow: hidden;
+}
+
+.rules-header {
+  text-align: center;
+  margin-bottom: 5rem;
+  z-index: 20;
+}
+
+/* 3D Carousel Setup */
+.carousel-container {
+  perspective: 1200px;
+  width: 100%;
+  height: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: grab;
+  position: relative;
+}
+
+.carousel-container:active {
+  cursor: grabbing;
+}
+
+.carousel-scene {
+  position: relative;
+  width: 320px;
+  height: 420px;
+  transform-style: preserve-3d;
+  /* Will be dynamically rotated via inline style */
+}
+
+.snap-transition {
+  transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.carousel-card {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  /* Preserve backface visibility so items remain visible as they rotate around */
+  backface-visibility: visible;
+  transition: filter 0.5s ease, opacity 0.5s ease;
+  filter: brightness(0.4) blur(3px);
+  opacity: 0.5;
+}
+
+/* Make the front-facing card fully bright and clear */
+.active-card {
+  filter: brightness(1) blur(0px);
+  opacity: 1;
+  z-index: 5;
+}
+
+/* Glassmorphism Inner Card */
+.card-glass {
+  width: 100%;
+  height: 100%;
+  background: rgba(11, 9, 20, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 24px;
+  padding: 3rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 2.5rem;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  transition: all 0.4s ease;
+}
+
+/* Glowing Border Effects (Only apply to the active front-facing card) */
+.carousel-card.active-card.cyan-glow .card-glass {
+  border-color: rgba(0, 243, 255, 0.5);
+  box-shadow: 0 0 40px rgba(0, 243, 255, 0.3), inset 0 0 20px rgba(0, 243, 255, 0.1);
+}
+
+.carousel-card.active-card.magenta-glow .card-glass {
+  border-color: rgba(255, 0, 255, 0.5);
+  box-shadow: 0 0 40px rgba(255, 0, 255, 0.3), inset 0 0 20px rgba(255, 0, 255, 0.1);
+}
+
+.carousel-card.active-card.yellow-glow .card-glass {
+  border-color: rgba(255, 215, 0, 0.5);
+  box-shadow: 0 0 40px rgba(255, 215, 0, 0.3), inset 0 0 20px rgba(255, 215, 0, 0.1);
+}
+
+/* Icons inside the cards */
+.rule-icon-container {
+  width: 120px;
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.rule-svg {
+  width: 60px;
+  height: 60px;
+  color: #fff;
+  transition: all 0.4s ease;
+}
+
+/* Activate SVGs glow when card is at the front */
+.active-card .cyan-glow-svg {
+  color: #00f3ff;
+  filter: drop-shadow(0 0 15px rgba(0, 243, 255, 0.8));
+}
+
+.active-card .magenta-glow-svg {
+  color: #ff00ff;
+  filter: drop-shadow(0 0 15px rgba(255, 0, 255, 0.8));
+}
+
+.active-card .yellow-glow-svg {
+  color: #ffd700;
+  filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.8));
+}
+
+/* Typography inside the 3D Cards */
+.rule-title-3d {
+  font-family: 'Outfit', sans-serif;
+  font-size: 2rem;
+  font-weight: 800;
+  color: #fff;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin: 0;
+  transition: all 0.4s ease;
+}
+
+.active-card.cyan-glow .rule-title-3d { text-shadow: 0 0 15px rgba(0, 243, 255, 0.5); }
+.active-card.magenta-glow .rule-title-3d { text-shadow: 0 0 15px rgba(255, 0, 255, 0.5); }
+.active-card.yellow-glow .rule-title-3d { text-shadow: 0 0 15px rgba(255, 215, 0, 0.5); }
+
+.rule-desc-3d {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: #ccc;
+  font-weight: 300;
+  margin: 0;
+}
+
+/* Responsive Scaling for smaller screens */
+@media (max-width: 768px) {
+  .carousel-scene {
+    width: 260px;
+    height: 360px;
+  }
+  
+  .card-glass {
+    padding: 2rem 1.5rem;
+    gap: 1.5rem;
+  }
+  
+  .rule-icon-container {
+    width: 90px;
+    height: 90px;
+  }
+  
+  .rule-svg {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .rule-title-3d {
+    font-size: 1.5rem;
+  }
+  
+  .rule-desc-3d {
+    font-size: 1rem;
+  }
+}
+
+/* Carousel Navigation Buttons */
+.carousel-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 1000px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(11, 9, 20, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 20;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.carousel-nav svg {
+  width: 30px;
+  height: 30px;
+}
+
+.carousel-nav:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+}
+
+.prev-btn {
+  left: 20px;
+}
+
+.next-btn {
+  right: 20px;
+}
+
+@media (max-width: 768px) {
+  .prev-btn {
+    left: 10px;
+  }
+  .next-btn {
+    right: 10px;
+  }
+}

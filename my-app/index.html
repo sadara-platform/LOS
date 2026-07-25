@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>my-app</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        corePlugins: {
+          preflight: false,
+        },
+        theme: {
+          extend: {
+            colors: {
+              brand: {
+                red: '#D32F2F',
+                accent: '#FF3333',
+                dark: '#0A0A0A',
+                charcoal: '#141414',
+                gray: '#1E1E1E',
+                muted: '#71717A',
+                light: '#F4F4F5',
+                cream: '#FAF9F6',
+              }
+            }
+          }
+        }
+      }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
