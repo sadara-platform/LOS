@@ -1,22 +1,13 @@
 import { useState, useEffect } from 'react';
-import { 
-  ShoppingBag, 
-  Search, 
-  Menu, 
-  X, 
-  Heart, 
-  Sparkles, 
-  ChevronRight, 
-  Plus, 
-  Minus, 
-  Info, 
-  ArrowRight,
-  Send,
-  Check,
-  TrendingUp,
-  Sliders,
-  Maximize2
-} from 'lucide-react';
+import { useParams } from 'react-router-dom';
+import { ShoppingBag, ArrowRight, Instagram, Twitter, ShieldCheck, Sparkles, Search, Plus, Minus, X, Star, Menu, Heart, ChevronRight, Info, Send, Check, TrendingUp, Sliders, Maximize2 } from 'lucide-react';
+
+const MoonIcon = () => (
+  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" /></svg>
+);
+const SunIcon = () => (
+  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+);
 
 // Product Catalog corresponding strictly to the LOS brand identity shown in the image
 interface Product {
@@ -28,6 +19,19 @@ interface Product {
   image: string;
   description: string;
   specs: string[];
+}
+
+interface BrandData {
+  name: string;
+  themeColor: string;
+  secondaryColor: string;
+  accentColor: string;
+  bgColor: string;
+  surfaceColor: string;
+  textPrimary: string;
+  textSecondary: string;
+  themeMode: string;
+  logoUrl?: string;
 }
 
 const PRODUCTS: Product[] = [
@@ -100,6 +104,59 @@ interface CartItem {
 }
 
 export default function BrandActivationPage() {
+  const { brandId: slug } = useParams();
+  const [brandData, setBrandData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [fetchError, setFetchError] = useState<string | null>(null);
+
+  // Fetch brand data from real backend
+  useEffect(() => {
+    const fetchBrandData = async () => {
+      try {
+        setIsLoading(true);
+        const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+        const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+        
+        // Use PostgREST syntax to query by slug
+        const response = await fetch(`${supabaseUrl}/rest/v1/brands?slug=eq.${slug}`, {
+          headers: {
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${supabaseKey}`
+          }
+        });
+        
+        if (!response.ok) {
+          throw new Error('Brand not found');
+        }
+        
+        const data = await response.json();
+        if (data.length === 0) {
+           throw new Error('Brand not found');
+        }
+        
+        // Map DB columns to our component state
+        const dbBrand = data[0];
+        setBrandData({
+          name: dbBrand.name,
+          themeColor: dbBrand.primary_color,
+          secondaryColor: dbBrand.secondary_color || '#ffffff',
+          accentColor: dbBrand.accent_color || '#1e1e1e',
+          bgColor: dbBrand.bg_color || '#0A0A0A',
+          surfaceColor: dbBrand.surface_color || '#141414',
+          textPrimary: dbBrand.text_primary || '#FFFFFF',
+          textSecondary: dbBrand.text_secondary || '#71717A',
+          themeMode: dbBrand.theme_mode || 'dark',
+          logoUrl: dbBrand.logo_url
+        });
+      } catch (err) {
+        setFetchError('Brand not found or offline.');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    if (slug) fetchBrandData();
+  }, [slug]);
+
   // Application UI states
   const [cart, setCart] = useState<CartItem[]>([]);
   const [wishlist, setWishlist] = useState<string[]>([]);
@@ -107,6 +164,9 @@ export default function BrandActivationPage() {
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [selectedSize, setSelectedSize] = useState('M');
   const [searchTerm, setSearchTerm] = useState('');
+  
+  // Custom Client-Side Theme Toggle
+  const [isClientDarkMode, setIsClientDarkMode] = useState<boolean | null>(null);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [activeCollectionTab, setActiveCollectionTab] = useState('ALL');
   
@@ -220,14 +280,54 @@ export default function BrandActivationPage() {
   const totalCartItems = cart.reduce((sum, item) => sum + item.quantity, 0);
   const cartSubtotal = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-brand-dark flex flex-col items-center justify-center text-brand-light space-y-4">
+        <div className="w-12 h-12 border-4 border-white/10 border-t-brand-red rounded-full animate-spin"></div>
+        <p className="text-sm tracking-widest text-brand-muted uppercase animate-pulse">Initializing Portal...</p>
+      </div>
+    );
+  }
+
+  if (fetchError || !brandData) {
+    return (
+      <div className="min-h-screen bg-brand-dark flex flex-col items-center justify-center text-brand-light space-y-6">
+        <div className="text-brand-red mb-4">
+           <svg className="w-20 h-20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+        </div>
+        <h1 className="text-4xl md:text-5xl font-black uppercase tracking-widest text-center">System Offline</h1>
+        <p className="text-brand-muted tracking-wide max-w-md text-center">This portal does not exist or has been suspended. Verify the URL slug.</p>
+      </div>
+    );
+  }
+
+  const currentMode = isClientDarkMode !== null 
+    ? (isClientDarkMode ? 'dark' : 'light') 
+    : (brandData?.themeMode || 'dark');
+
+  const isSwapped = currentMode !== brandData?.themeMode;
+
+  const themeVars = {
+    '--brand-theme-color': brandData?.themeColor,
+    '--brand-secondary': brandData?.secondaryColor,
+    '--brand-accent': brandData?.accentColor,
+    '--brand-bg': isSwapped ? brandData?.textPrimary : brandData?.bgColor,
+    '--brand-surface': isSwapped ? brandData?.textSecondary : brandData?.surfaceColor,
+    '--brand-text': isSwapped ? brandData?.bgColor : brandData?.textPrimary,
+    '--brand-text-muted': isSwapped ? brandData?.surfaceColor : brandData?.textSecondary,
+  } as React.CSSProperties;
+
   return (
-    <div className="min-h-screen bg-brand-dark text-brand-light font-sans selection:bg-brand-red selection:text-white">
+    <div 
+      className={`min-h-screen font-sans selection:bg-brand-red selection:text-white bg-brand-bg text-brand-text`}
+      style={themeVars}
+    >
       
       {/* 1. TOP BAR */}
       <div className="bg-brand-charcoal text-[11px] tracking-widest uppercase border-b border-white/5 py-2.5 px-4 md:px-8 flex flex-col sm:flex-row justify-between items-center gap-2">
-        <div className="text-brand-muted font-light">Living True Details Happy // LOS</div>
+        <div className="text-brand-muted font-light">Living True Details Happy // {brandData?.name || 'LOS'}</div>
         <div className="font-semibold text-brand-light flex items-center gap-1.5">
-          <span className="w-1.5 h-1.5 bg-brand-red rounded-full animate-ping"></span>
+          <span className="w-1.5 h-1.5 bg-brand-secondary rounded-full animate-ping"></span>
           FOR DEDICATED REBELS // SECURE GLOBAL EXPRESS SHIPPING
         </div>
         <div className="flex items-center gap-4 text-brand-muted">
@@ -246,9 +346,13 @@ export default function BrandActivationPage() {
       <header className="sticky top-0 z-40 bg-brand-dark/95 backdrop-blur-md border-b border-white/5 px-4 md:px-8 py-4 flex justify-between items-center transition-all">
         <div className="flex items-center gap-2">
           {/* Logo matches exact condensed editorial style of LOS */}
-          <a href="#" className="text-3xl md:text-4xl font-display font-bold tracking-tighter text-brand-light hover:text-brand-red transition-colors">
-            LOS
-          </a>
+          {brandData?.logoUrl ? (
+            <img src={brandData.logoUrl} alt={brandData.name} className="h-10 object-contain" />
+          ) : (
+            <a href="#" className="text-3xl md:text-4xl font-display font-bold tracking-tighter text-brand-light hover:text-brand-red transition-colors">
+              {brandData?.name || 'LOS'}
+            </a>
+          )}
         </div>
 
         {/* Desktop Menu */}
@@ -256,8 +360,8 @@ export default function BrandActivationPage() {
           <a href="#" className="text-brand-light hover:text-brand-red transition-colors border-b border-brand-red pb-0.5">Home</a>
           <a href="#shop-now" className="hover:text-brand-light transition-colors">Shop</a>
           <a href="#collections" className="hover:text-brand-light transition-colors">Collections</a>
-          <a href="#ai-stylist" className="hover:text-brand-red transition-colors flex items-center gap-1.5 text-brand-light bg-brand-red/10 px-3 py-1.5 rounded-full border border-brand-red/20">
-            <Sparkles className="w-3 h-3 text-brand-red" />
+          <a href="#ai-stylist" className="hover:text-brand-accent transition-colors flex items-center gap-1.5 text-brand-light bg-brand-accent/10 px-3 py-1.5 rounded-full border border-brand-accent/20">
+            <Sparkles className="w-3 h-3 text-brand-accent" />
             STYLING AI
           </a>
           <a href="#footer" className="hover:text-brand-light transition-colors">About</a>
@@ -273,12 +377,12 @@ export default function BrandActivationPage() {
                 placeholder="SEARCH ARCHIVE..." 
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="bg-brand-gray border border-white/10 text-xs text-white rounded-md px-3 py-1.5 w-40 md:w-56 focus:outline-none focus:border-brand-red/50 uppercase tracking-wider mr-2 font-display"
+                className="bg-brand-surface border border-white/10 text-xs text-brand-text rounded-md px-3 py-1.5 w-40 md:w-56 focus:outline-none focus:border-brand-red/50 uppercase tracking-wider mr-2 font-display"
               />
             )}
             <button 
               onClick={() => setIsSearchOpen(!isSearchOpen)}
-              className="p-2 text-brand-muted hover:text-brand-light transition-colors"
+              className="p-2 text-brand-muted hover:text-brand-text transition-colors"
               aria-label="Toggle Search"
             >
               <Search className="w-5 h-5" />
@@ -286,11 +390,19 @@ export default function BrandActivationPage() {
           </div>
 
           <button 
+            onClick={() => setIsClientDarkMode(currentMode === 'light')}
+            className="p-2 text-brand-muted hover:text-brand-text transition-colors"
+            aria-label="Toggle Theme"
+          >
+            {currentMode === 'dark' ? <SunIcon /> : <MoonIcon />}
+          </button>
+
+          <button 
             onClick={() => {
               const el = document.getElementById('ai-stylist');
               el?.scrollIntoView({ behavior: 'smooth' });
             }}
-            className="hidden sm:flex items-center gap-1.5 bg-brand-red text-white text-[12px] font-bold tracking-widest uppercase px-4 py-2 rounded-full hover:bg-brand-red/90 hover:scale-105 transition-all"
+            className="hidden sm:flex items-center gap-1.5 bg-brand-accent text-brand-dark text-[12px] font-bold tracking-widest uppercase px-4 py-2 rounded-full hover:opacity-90 hover:scale-105 transition-all"
           >
             <Sparkles className="w-3.5 h-3.5" />
             STYLING AI
@@ -303,7 +415,7 @@ export default function BrandActivationPage() {
           >
             <ShoppingBag className="w-5 h-5 text-brand-light" />
             {totalCartItems > 0 && (
-              <span className="absolute -top-1 -right-1 bg-brand-red text-white text-[9px] font-bold w-4.5 h-4.5 rounded-full flex items-center justify-center font-display border border-brand-dark">
+              <span className="absolute -top-1 -right-1 bg-brand-secondary text-white text-[9px] font-bold w-4.5 h-4.5 rounded-full flex items-center justify-center font-display border border-brand-dark">
                 {totalCartItems}
               </span>
             )}
@@ -323,15 +435,15 @@ export default function BrandActivationPage() {
 
           {/* BACKGROUND TEXT BEHIND MODEL */}
           <div className="absolute inset-0 flex flex-col justify-center items-center pointer-events-none select-none opacity-[0.04] md:opacity-[0.07] z-0">
-            <h1 className="text-[12vw] font-display font-bold leading-none tracking-tighter text-white">STRETEAT</h1>
-            <h2 className="text-[10vw] font-display font-light leading-none tracking-widest text-brand-red">SELVING</h2>
+            <h1 className="text-[12vw] font-display font-bold leading-none tracking-tighter text-brand-secondary">STRETEAT</h1>
+            <h2 className="text-[10vw] font-display font-light leading-none tracking-widest text-brand-accent">SELVING</h2>
           </div>
 
           {/* Left Editorial Info Block */}
           <div className="w-full lg:w-5/12 z-10 space-y-6 text-left relative">
-            <div className="inline-flex items-center gap-2 bg-brand-red/10 border border-brand-red/25 px-4 py-1 rounded-full">
-              <span className="w-1.5 h-1.5 bg-brand-red rounded-full animate-pulse"></span>
-              <span className="text-[10px] tracking-widest font-bold uppercase text-brand-red font-display">NEW EXPANSION 03.1</span>
+            <div className="inline-flex items-center gap-2 bg-brand-secondary/10 border border-brand-secondary/25 px-4 py-1 rounded-full">
+              <span className="w-1.5 h-1.5 bg-brand-secondary rounded-full animate-pulse"></span>
+              <span className="text-[10px] tracking-widest font-bold uppercase text-brand-secondary font-display">NEW EXPANSION 03.1</span>
             </div>
             
             <h3 className="text-5xl md:text-7xl lg:text-8xl font-display font-bold leading-tight tracking-tight uppercase">
@@ -356,7 +468,7 @@ export default function BrandActivationPage() {
                   const el = document.getElementById('ai-stylist');
                   el?.scrollIntoView({ behavior: 'smooth' });
                 }}
-                className="bg-transparent border border-white/20 hover:border-brand-red text-brand-light hover:text-brand-red text-[13px] font-bold tracking-widest uppercase px-6 py-3.5 rounded-full transition-all flex items-center gap-2"
+                className="bg-transparent border border-brand-secondary/40 hover:border-brand-secondary text-brand-light hover:text-brand-secondary text-[13px] font-bold tracking-widest uppercase px-6 py-3.5 rounded-full transition-all flex items-center gap-2"
               >
                 AI STYLIST CONSULT
                 <Sparkles className="w-3.5 h-3.5" />

@@ -1,0 +1,34 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #0A0A0A;
+  --color-playerX: #22d3ee;
+  --color-playerO: #d946ef;
+  
+  --shadow-neon-x: 0 0 10px rgba(34, 211, 238, 0.8), 0 0 20px rgba(34, 211, 238, 0.4);
+  --shadow-neon-o: 0 0 10px rgba(217, 70, 239, 0.8), 0 0 20px rgba(217, 70, 239, 0.4);
+  --shadow-glass: 0 4px 30px rgba(0, 0, 0, 0.5);
+}
+
+@utility text-glow-x {
+  text-shadow: 0 0 10px rgba(34, 211, 238, 0.8), 0 0 20px rgba(34, 211, 238, 0.4);
+}
+
+@utility text-glow-o {
+  text-shadow: 0 0 10px rgba(217, 70, 239, 0.8), 0 0 20px rgba(217, 70, 239, 0.4);
+}
+
+@utility bg-glass {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+body {
+  background-color: #0A0A0A;
+  color: white;
+  font-family: system-ui, -apple-system, sans-serif;
+  margin: 0;
+  padding: 0;
+}

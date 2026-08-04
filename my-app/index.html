@@ -15,13 +15,17 @@
           extend: {
             colors: {
               brand: {
-                red: '#D32F2F',
-                accent: '#FF3333',
-                dark: '#0A0A0A',
-                charcoal: '#141414',
+                red: 'var(--brand-theme-color, #D32F2F)',
+                secondary: 'var(--brand-secondary, #FFFFFF)',
+                accent: 'var(--brand-accent, #1E1E1E)',
+                bg: 'var(--brand-bg, #0A0A0A)',
+                surface: 'var(--brand-surface, #141414)',
+                text: 'var(--brand-text, #FFFFFF)',
+                muted: 'var(--brand-text-muted, #71717A)',
+                dark: 'var(--brand-bg, #0A0A0A)', // fallback legacy
+                charcoal: 'var(--brand-surface, #141414)', // fallback legacy
                 gray: '#1E1E1E',
-                muted: '#71717A',
-                light: '#F4F4F5',
+                light: 'var(--brand-text, #FFFFFF)', // fallback legacy
                 cream: '#FAF9F6',
               }
             }
