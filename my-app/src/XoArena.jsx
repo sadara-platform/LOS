@@ -12,7 +12,9 @@ export default function XoArena() {
   useEffect(() => {
     let sid = localStorage.getItem('xo_session_id');
     if (!sid) {
-      sid = crypto.randomUUID();
+      sid = typeof crypto !== 'undefined' && crypto.randomUUID 
+        ? crypto.randomUUID() 
+        : 'sess_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
       localStorage.setItem('xo_session_id', sid);
     }
     setSessionUser(sid);
