@@ -6,6 +6,9 @@ const BrandActivationPage = lazy(() => import('./BrandActivationPage'));
 const AddBrandPage = lazy(() => import('./AddBrandPage'));
 const TournamentController = lazy(() => import('./TournamentController'));
 const AdminLayout = lazy(() => import('./AdminLayout'));
+const BrandList = lazy(() => import('./BrandList'));
+const BrandDashboard = lazy(() => import('./BrandDashboard'));
+const XoArena = lazy(() => import('./XoArena'));
 
 const LoadingFallback = () => (
   <div className="min-h-screen bg-[#0A0A0A] flex flex-col items-center justify-center text-white space-y-4">
@@ -21,10 +24,13 @@ function App() {
         <Routes>
           <Route path="/" element={<TournamentLandingPage />} />
           <Route path="/:brandId" element={<BrandActivationPage />} />
+          <Route path="/arena" element={<XoArena />} />
           
           {/* Admin Routes with Persistent Layout */}
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<Navigate to="tournament-control" replace />} />
+            <Route path="brands" element={<BrandList />} />
+            <Route path="brands/:id" element={<BrandDashboard />} />
             <Route path="add-brand" element={<AddBrandPage />} />
             <Route path="tournament-control" element={<TournamentController />} />
             <Route path="analytics" element={

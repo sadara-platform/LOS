@@ -1065,3 +1065,7 @@ body {
 .animate-float {
   animation: float-slow 6s ease-in-out infinite;
 }
+
+.text-glow-x { text-shadow: 0 0 10px rgba(34, 211, 238, 0.8), 0 0 20px rgba(34, 211, 238, 0.4); }
+.text-glow-o { text-shadow: 0 0 10px rgba(217, 70, 239, 0.8), 0 0 20px rgba(217, 70, 239, 0.4); }
+

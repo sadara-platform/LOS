@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import NetworkMarquee from './NetworkMarquee';
+import { Link } from 'react-router-dom';
 import RulesSection from './RulesSection';
 import './index.css';
 
@@ -168,6 +169,7 @@ function TournamentLandingPage() {
           </div>
 
           <div className="cta-container">
+            <Link to="/arena" className="btn btn-primary" style={{ backgroundColor: '#22d3ee', color: '#000', textShadow: 'none', boxShadow: '0 0 20px rgba(34,211,238,0.5)' }}>ENTER XO ARENA</Link>
             <button className="btn btn-primary">Login / My Account</button>
             <button className="btn btn-secondary">How to Join?</button>
           </div>

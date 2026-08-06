@@ -34,68 +34,6 @@ interface BrandData {
   logoUrl?: string;
 }
 
-const PRODUCTS: Product[] = [
-  {
-    id: 'prod-daty',
-    name: 'DATY TACTICAL UTILITY VEST',
-    sku: 'DV-95E9',
-    price: 145,
-    category: 'Vests & Straps',
-    image: 'https://images.unsplash.com/photo-1578587018452-892bacefd3f2?q=80&w=800',
-    description: 'An avant-garde technical chest rig built for high-utility styling. Features heavy-duty ballistic webbing, modular magnetic quick-release cobra buckles, and waterproof zip utility pockets.',
-    specs: ['1000D Ballistic Cordura', 'Dual asymmetric magnetic buckles', 'Waterproof zippers & nylon lining', 'Laser-cut Molle attachment system']
-  },
-  {
-    id: 'prod-nasy',
-    name: 'NASY NEON TRACK CARGO PANTS',
-    sku: 'NT-3845',
-    price: 135,
-    category: 'Pants',
-    image: 'https://images.unsplash.com/photo-1607990283143-e81e7a2c93ab?q=80&w=800',
-    description: 'Techwear cargo trousers engineered with fluorescent neon cybernetic stitching and geometric pocket flaps. Adjustable ankle shock-cords allow for customizable styling from wide-leg to jogger drapes.',
-    specs: ['High-tensile ripstop tech fabric', 'Double-stitched fluorescent embroidery', 'Secure multi-cargo pockets', 'Ergonomic articulated knees']
-  },
-  {
-    id: 'prod-nary',
-    name: 'NARY OVERSIZED SEAM HOODIE',
-    sku: 'NH-SE3P',
-    price: 120,
-    category: 'Hoodies',
-    image: 'https://images.unsplash.com/photo-1509631179647-0177331693ae?q=80&w=800',
-    description: 'Premium heavyweight silhouette meticulously crafted from 480GSM organic French terry cotton. Styled with distressed raw-edge shoulder seams, a deep unstructured hood, and technical crimson cord locks.',
-    specs: ['480GSM Ultra-heavy French terry', 'Signature red toggle cord locks', 'Raw-distressed aesthetic seams', 'Pre-shrunk vintage carbon wash']
-  },
-  {
-    id: 'prod-shield',
-    name: 'LOS THERMAL SHIELD PARKA',
-    sku: 'SP-1092',
-    price: 189,
-    category: 'Outerwear',
-    image: 'https://images.unsplash.com/photo-1551028719-00167b16eac5?q=80&w=800',
-    description: 'Wind-resistant and moisture-repelling longline utility jacket featuring a modular harness sling strap and a fully detachable hood with a wire-reinforced brim.',
-    specs: ['DWR-coated nylon shell', 'Integrated elastic internal harness sling', 'Matte black metal fasteners', 'Asymmetrical protective zip shield']
-  },
-  {
-    id: 'prod-tee',
-    name: 'DISTRESSED CORE STENCIL TEE',
-    sku: 'ST-0012',
-    price: 65,
-    category: 'T-Shirts',
-    image: 'https://images.unsplash.com/photo-1583743814966-8936f5b7be1a?q=80&w=800',
-    description: 'A relaxed midweight combed cotton tee washed down to a vintage faded grey/black tone. Finished with raw-cut hems and a subtle white stencil brand graphic printed on the chest.',
-    specs: ['240GSM combed jersey cotton', 'Acid-faded vintage black wash', 'Raw-cut double-stitch hem', 'Water-based non-cracking print']
-  },
-  {
-    id: 'prod-belt',
-    name: 'CYBERPUNK INDUSTRIAL COBRA BELT',
-    sku: 'CB-4552',
-    price: 45,
-    category: 'Accessories',
-    image: 'https://images.unsplash.com/photo-1618354691373-d851c5c3a990?q=80&w=800',
-    description: 'High-strength industrial safety belt constructed with heavy-duty structural webbing and an authentic quick-release matte steel cobra buckle finished with a bold red woven tag.',
-    specs: ['Military-spec heavy webbing', 'Matte steel quick-release cobra buckle', 'Subtle woven red brand tag', 'One-size infinite adjustment']
-  }
-];
 
 interface CartItem {
   product: Product;
@@ -106,6 +44,7 @@ interface CartItem {
 export default function BrandActivationPage() {
   const { brandId: slug } = useParams();
   const [brandData, setBrandData] = useState<any>(null);
+  const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [fetchError, setFetchError] = useState<string | null>(null);
 
@@ -148,6 +87,30 @@ export default function BrandActivationPage() {
           themeMode: dbBrand.theme_mode || 'dark',
           logoUrl: dbBrand.logo_url
         });
+        
+        // Fetch products for this brand
+        const prodRes = await fetch(`${supabaseUrl}/rest/v1/products?brand_id=eq.${dbBrand.id}&order=created_at.desc`, {
+          headers: {
+            'apikey': supabaseKey,
+            'Authorization': `Bearer ${supabaseKey}`
+          }
+        });
+        if (prodRes.ok) {
+          const prodData = await prodRes.json();
+          // Map database structure to Product interface
+          const mappedProducts = prodData.map((p: any) => ({
+            id: p.id,
+            name: p.name,
+            sku: p.sku,
+            price: Number(p.price),
+            category: p.category,
+            image: p.image_url,
+            description: p.description,
+            specs: p.specs
+          }));
+          setProducts(mappedProducts || []);
+        }
+        
       } catch (err) {
         setFetchError('Brand not found or offline.');
       } finally {
@@ -274,8 +237,8 @@ export default function BrandActivationPage() {
 
   // Filters for collections grid
   const filteredProducts = activeCollectionTab === 'ALL'
-    ? PRODUCTS
-    : PRODUCTS.filter(p => p.category.toUpperCase().includes(activeCollectionTab) || p.name.toUpperCase().includes(activeCollectionTab));
+    ? products
+    : products.filter(p => p.category.toUpperCase().includes(activeCollectionTab) || p.name.toUpperCase().includes(activeCollectionTab));
 
   const totalCartItems = cart.reduce((sum, item) => sum + item.quantity, 0);
   const cartSubtotal = cart.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
@@ -482,9 +445,9 @@ export default function BrandActivationPage() {
               {/* Dynamic image switching based on look selection */}
               <img 
                 src={
-                  activeHeroLook === 0 ? PRODUCTS[0].image :
-                  activeHeroLook === 1 ? PRODUCTS[1].image :
-                  PRODUCTS[2].image
+                  activeHeroLook === 0 ? (products[0]?.image || '') :
+                  activeHeroLook === 1 ? (products[1]?.image || '') :
+                  (products[2]?.image || '')
                 }
                 alt="LOS Premium Model"
                 className="w-full h-full object-cover grayscale opacity-90 transition-all duration-500 hover:scale-105"
@@ -498,13 +461,13 @@ export default function BrandActivationPage() {
                     {activeHeroLook === 0 ? 'LOOK 01' : activeHeroLook === 1 ? 'LOOK 02' : 'LOOK 03'}
                   </span>
                   <span className="text-lg font-display font-bold tracking-wider block text-white uppercase">
-                    {activeHeroLook === 0 ? 'DATY UTILITY' : activeHeroLook === 1 ? 'NASY NEON' : 'NARY CORE'}
+                    {activeHeroLook === 0 ? (products[0]?.name || 'LOOK 01') : activeHeroLook === 1 ? (products[1]?.name || 'LOOK 02') : (products[2]?.name || 'LOOK 03')}
                   </span>
                 </div>
                 <button 
                   onClick={() => {
-                    const selected = activeHeroLook === 0 ? PRODUCTS[0] : activeHeroLook === 1 ? PRODUCTS[1] : PRODUCTS[2];
-                    setSelectedProduct(selected);
+                    const selected = activeHeroLook === 0 ? products[0] : activeHeroLook === 1 ? products[1] : products[2];
+                    if(selected) setSelectedProduct(selected);
                   }}
                   className="bg-brand-red/90 hover:bg-brand-red text-white p-2.5 rounded-full transition-colors group"
                 >
@@ -517,20 +480,23 @@ export default function BrandActivationPage() {
           {/* Right Thumbnails / Quick View Switches (Matches bottom right of the hero screenshot) */}
           <div className="hidden xl:flex flex-col gap-4 z-10 justify-center">
             <span className="text-[10px] tracking-widest uppercase text-brand-muted font-bold text-center">SELECT LOOKS</span>
-            {[0, 1, 2].map((idx) => (
+            {[0, 1, 2].map((idx) => {
+              const product = products[idx];
+              if (!product) return null;
+              return (
               <button 
                 key={idx}
                 onClick={() => setActiveHeroLook(idx)}
                 className={`w-14 h-20 rounded-xl overflow-hidden border-2 transition-all hover:scale-105 ${activeHeroLook === idx ? 'border-brand-red scale-105' : 'border-white/10 opacity-50'}`}
               >
                 <img 
-                  src={PRODUCTS[idx].image} 
+                  src={product.image} 
                   alt={`Look ${idx}`} 
                   className="w-full h-full object-cover grayscale"
                   referrerPolicy="no-referrer"
                 />
               </button>
-            ))}
+            )})}
           </div>
 
         </div>
@@ -558,7 +524,7 @@ export default function BrandActivationPage() {
 
           {/* THREE MODELS OVERLAPPING (Strictly replication of the 3-model visual grid under SOEFGN in photo) */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 lg:gap-8 z-10 relative">
-            {PRODUCTS.slice(0, 3).map((product, idx) => {
+            {products.slice(0, 3).map((product, idx) => {
               // Custom names shown in screenshot under models: "Nasy Trek / Dem 0.1", "Daty Tlak / Sep 1.3", "Nary Trek / Nov 1.2"
               const mockScreenshotLabel = idx === 0 
                 ? { label: 'NASY TREK', sub: 'DEM 0.1' }
@@ -1104,7 +1070,7 @@ export default function BrandActivationPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {PRODUCTS.map((product) => (
+            {filteredProducts.map((product) => (
               <div 
                 key={product.id}
                 className="bg-brand-charcoal/40 border border-white/5 rounded-3xl p-5 hover:border-brand-red/30 transition-all group flex flex-col justify-between"
