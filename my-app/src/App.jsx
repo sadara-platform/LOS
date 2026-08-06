@@ -1,6 +1,34 @@
 import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
+class GlobalErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="min-h-screen bg-black text-white p-8 flex flex-col justify-center items-center text-center">
+          <h1 className="text-3xl font-bold text-red-500 mb-4">Application Error</h1>
+          <p className="text-gray-400 mb-8 max-w-lg">
+            {this.state.error?.message || "An unexpected error occurred."}
+          </p>
+          <div className="bg-red-900/20 border border-red-500/50 p-4 rounded-xl text-sm font-mono text-left max-w-2xl overflow-auto text-red-400">
+            Ensure all Environment Variables (like VITE_SUPABASE_URL) are set in your hosting provider (Netlify).
+          </div>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 const TournamentLandingPage = lazy(() => import('./TournamentLandingPage'));
 const BrandActivationPage = lazy(() => import('./BrandActivationPage'));
 const AddBrandPage = lazy(() => import('./AddBrandPage'));
@@ -20,8 +48,9 @@ const LoadingFallback = () => (
 function App() {
   return (
     <Router>
-      <Suspense fallback={<LoadingFallback />}>
-        <Routes>
+      <GlobalErrorBoundary>
+        <Suspense fallback={<LoadingFallback />}>
+          <Routes>
           <Route path="/" element={<TournamentLandingPage />} />
           <Route path="/:brandId" element={<BrandActivationPage />} />
           <Route path="/arena" element={<XoArena />} />
@@ -42,6 +71,7 @@ function App() {
           </Route>
         </Routes>
       </Suspense>
+      </GlobalErrorBoundary>
     </Router>
   );
 }
