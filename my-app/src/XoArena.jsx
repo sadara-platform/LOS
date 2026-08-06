@@ -3,6 +3,7 @@ import { Swords, Users, Clock, Trophy } from 'lucide-react';
 import { supabase } from './SupabaseClient';
 
 export default function XoArena() {
+  const [error, setError] = useState(null);
   const [matchId, setMatchId] = useState('');
   const [inputMatchId, setInputMatchId] = useState('');
   const [matchState, setMatchState] = useState(null);
@@ -10,14 +11,18 @@ export default function XoArena() {
   
   // Create a unique session ID for this browser tab
   useEffect(() => {
-    let sid = localStorage.getItem('xo_session_id');
-    if (!sid) {
-      sid = typeof crypto !== 'undefined' && crypto.randomUUID 
-        ? crypto.randomUUID() 
-        : 'sess_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-      localStorage.setItem('xo_session_id', sid);
+    try {
+      let sid = localStorage.getItem('xo_session_id');
+      if (!sid) {
+        sid = typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+          ? crypto.randomUUID() 
+          : 'sess_' + Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+        localStorage.setItem('xo_session_id', sid);
+      }
+      setSessionUser(sid);
+    } catch (e) {
+      setError(e.toString());
     }
-    setSessionUser(sid);
   }, []);
 
   // Sync URL logic
@@ -179,6 +184,13 @@ export default function XoArena() {
     if (matchState.player_o === sessionUser) return 'O';
     return 'Spectator';
   };
+
+  if (error) {
+    return <div className="min-h-screen bg-black text-red-500 p-8 flex flex-col justify-center items-center text-center">
+      <h1 className="text-2xl font-bold mb-4">React Crashed in XoArena</h1>
+      <p>{error}</p>
+    </div>;
+  }
 
   if (!matchId || !matchState) {
     return (
