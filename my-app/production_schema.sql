@@ -48,24 +48,24 @@ ALTER TABLE codes ENABLE ROW LEVEL SECURITY;
 ALTER TABLE offers ENABLE ROW LEVEL SECURITY;
 
 -- 4. RLS Policies for `brands`
--- Anyone can view brands
+DROP POLICY IF EXISTS "Public can view brands" ON brands;
 CREATE POLICY "Public can view brands" ON brands
     FOR SELECT USING (true);
     
--- Admin (or any authenticated user for MVP) can create brands
+DROP POLICY IF EXISTS "Anyone can create brands" ON brands;
 CREATE POLICY "Anyone can create brands" ON brands
     FOR INSERT WITH CHECK (true);
 
--- Only the assigned Brand Owner can update their own brand
+DROP POLICY IF EXISTS "Brand Owner can update their brand" ON brands;
 CREATE POLICY "Brand Owner can update their brand" ON brands
     FOR UPDATE USING (auth.uid() = owner_id);
 
 -- 5. RLS Policies for `products`
--- Anyone can view products
+DROP POLICY IF EXISTS "Public can view products" ON products;
 CREATE POLICY "Public can view products" ON products
     FOR SELECT USING (true);
 
--- Only the Brand Owner can insert/update/delete their products
+DROP POLICY IF EXISTS "Brand Owner can manage products" ON products;
 CREATE POLICY "Brand Owner can manage products" ON products
     FOR ALL USING (
         auth.uid() IN (
@@ -74,11 +74,11 @@ CREATE POLICY "Brand Owner can manage products" ON products
     );
 
 -- 6. RLS Policies for `offers`
--- Anyone can view offers
+DROP POLICY IF EXISTS "Public can view offers" ON offers;
 CREATE POLICY "Public can view offers" ON offers
     FOR SELECT USING (true);
 
--- Only the Brand Owner can insert/update/delete their offers
+DROP POLICY IF EXISTS "Brand Owner can manage offers" ON offers;
 CREATE POLICY "Brand Owner can manage offers" ON offers
     FOR ALL USING (
         auth.uid() IN (
@@ -87,7 +87,7 @@ CREATE POLICY "Brand Owner can manage offers" ON offers
     );
 
 -- 7. RLS Policies for `codes`
--- Brand Owners can see and manage all codes for their brand
+DROP POLICY IF EXISTS "Brand Owner can manage codes" ON codes;
 CREATE POLICY "Brand Owner can manage codes" ON codes
     FOR ALL USING (
         auth.uid() IN (
@@ -95,9 +95,10 @@ CREATE POLICY "Brand Owner can manage codes" ON codes
         )
     );
 
--- Public users can view/update codes IF they are claiming it or already own it
+DROP POLICY IF EXISTS "Public can view or claim codes" ON codes;
 CREATE POLICY "Public can view or claim codes" ON codes
     FOR SELECT USING (status = 'active' OR user_id = auth.uid());
 
+DROP POLICY IF EXISTS "Public can update unassigned codes" ON codes;
 CREATE POLICY "Public can update unassigned codes" ON codes
     FOR UPDATE USING (status = 'active');
