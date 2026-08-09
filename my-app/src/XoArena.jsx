@@ -78,7 +78,9 @@ export default function XoArena() {
           player_x: sessionUser, 
           status: 'waiting',
           board: Array(9).fill(''),
-          turn: 'X'
+          turn: 'X',
+          history_x: [],
+          history_o: []
         }
       ])
       .select()
@@ -153,12 +155,34 @@ export default function XoArena() {
     const role = getMyRole();
     if (role !== matchState.turn) return; // Not their turn
 
+    // Optimistic Update
     const newBoard = [...matchState.board];
+    let newHistoryX = [...(matchState.history_x || [])];
+    let newHistoryO = [...(matchState.history_o || [])];
+    
+    if (role === 'X') {
+      newHistoryX.push(index);
+      if (newHistoryX.length > 3) {
+        const popped = newHistoryX.shift();
+        newBoard[popped] = '';
+      }
+    } else {
+      newHistoryO.push(index);
+      if (newHistoryO.length > 3) {
+        const popped = newHistoryO.shift();
+        newBoard[popped] = '';
+      }
+    }
+    
     newBoard[index] = role;
 
     const winResult = checkWin(newBoard);
     
-    let updates = { board: newBoard };
+    let updates = { 
+      board: newBoard, 
+      history_x: newHistoryX, 
+      history_o: newHistoryO 
+    };
     
     if (winResult) {
       updates.status = 'completed';
@@ -171,11 +195,16 @@ export default function XoArena() {
     // Optimistically update local state to avoid UI lag
     setMatchState({ ...matchState, ...updates });
 
-    // Send to Supabase
-    await supabase
-      .from('xo_matches')
-      .update(updates)
-      .eq('id', matchId);
+    // Send to Supabase Backend
+    const { error } = await supabase.rpc('make_xo_move', {
+      p_match_id: matchId,
+      p_role: role,
+      p_index: index
+    });
+
+    if (error) {
+      console.error("Move failed on backend", error);
+    }
   };
 
   const getMyRole = () => {
@@ -316,6 +345,12 @@ export default function XoArena() {
             const isWinningCell = matchState.winning_cells?.includes(index);
             const isHoverable = matchState.status === 'playing' && isMyTurn && !cell;
             
+            // Highlight the oldest mark if the queue is full (vulnerable to disappear)
+            const isVulnerable = matchState.status === 'playing' && (
+              (cell === 'X' && matchState.history_x?.length === 3 && matchState.history_x[0] === index) ||
+              (cell === 'O' && matchState.history_o?.length === 3 && matchState.history_o[0] === index)
+            );
+            
             return (
               <div 
                 key={index}
@@ -324,6 +359,7 @@ export default function XoArena() {
                   w-24 h-24 sm:w-32 sm:h-32 bg-[#0A0A0A] rounded-2xl flex items-center justify-center text-6xl sm:text-7xl font-black transition-all duration-300 border border-white/5 relative overflow-hidden
                   ${isHoverable ? 'cursor-pointer hover:bg-white/5 hover:border-white/10 hover:scale-[1.02] z-10 shadow-lg' : 'cursor-default'}
                   ${isWinningCell ? (matchState.winner === 'X' ? 'bg-red-500/10 border-red-500/50' : 'bg-cyan-500/10 border-cyan-500/50') : ''}
+                  ${isVulnerable ? 'opacity-40 animate-pulse border-white/20' : ''}
                 `}
               >
                 {cell === 'X' && (

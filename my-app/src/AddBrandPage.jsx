@@ -19,6 +19,7 @@ export default function AddBrandPage() {
   const [formData, setFormData] = useState({
     name: '',
     slug: '',
+    phoneNumber: '',
     logoUrl: '',
     themeColor: '#8b5cf6',
     secondaryColor: '#ffffff',
@@ -106,6 +107,7 @@ export default function AddBrandPage() {
       const payload = {
         name: formData.name,
         slug: formData.slug,
+        phone_number: formData.phoneNumber,
         logo_url: formData.logoUrl,
         primary_color: formData.themeColor,
         secondary_color: formData.secondaryColor,
@@ -141,6 +143,7 @@ export default function AddBrandPage() {
       setFormData({
         name: '',
         slug: '',
+        phoneNumber: '',
         logoUrl: '',
         themeColor: '#8b5cf6',
         secondaryColor: '#ffffff',
@@ -212,6 +215,19 @@ export default function AddBrandPage() {
                   className="w-full bg-black/50 border border-white/20 rounded-r-xl p-4 text-white font-mono placeholder-gray-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                 />
               </div>
+            </div>
+
+            {/* Brand Phone Number */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-300 mb-2">Brand Phone Number</label>
+              <input 
+                type="tel" 
+                name="phoneNumber"
+                value={formData.phoneNumber}
+                onChange={handleChange}
+                placeholder="e.g. 05XXXXXXXX"
+                className="w-full bg-black/50 border border-white/20 rounded-xl p-4 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+              />
             </div>
 
             {/* Brand Logo URL */}
