@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { createClient } from '@supabase/supabase-js';
 
 // Icons (using simple SVGs to avoid dependency issues, or you can import from lucide-react if installed)
 const CheckCircleIcon = () => (
@@ -29,7 +30,9 @@ export default function AddBrandPage() {
     textPrimary: '#FFFFFF',
     textSecondary: '#71717A',
     themeMode: 'dark',
-    codeAllocation: 100
+    codeAllocation: 100,
+    ownerEmail: '',
+    ownerPassword: ''
   });
 
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -104,6 +107,34 @@ export default function AddBrandPage() {
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
       const supabaseKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
       
+      let newOwnerId = null;
+
+      // 1. Create Auth User if credentials are provided
+      if (formData.ownerEmail && formData.ownerPassword) {
+        // Create a temporary Supabase client with persistSession: false
+        // This ensures the current Admin is NOT logged out when the new user is created
+        const tempSupabase = createClient(supabaseUrl, supabaseKey, {
+          auth: { persistSession: false, autoRefreshToken: false }
+        });
+        
+        const { data: authData, error: authError } = await tempSupabase.auth.signUp({
+          email: formData.ownerEmail,
+          password: formData.ownerPassword
+        });
+
+        if (authError) {
+          throw new Error(`Auth Error: ${authError.message}`);
+        }
+        
+        if (authData?.user) {
+          newOwnerId = authData.user.id;
+        } else {
+          // If no error but no user, usually means email confirmation is required and blocked it.
+          console.warn("User created, but ID not returned. Check if 'Confirm Email' is enabled in Supabase.");
+        }
+      }
+
+      // 2. Insert into Brands table
       const payload = {
         name: formData.name,
         slug: formData.slug,
@@ -116,7 +147,8 @@ export default function AddBrandPage() {
         surface_color: formData.surfaceColor,
         text_primary: formData.textPrimary,
         text_secondary: formData.textSecondary,
-        theme_mode: formData.themeMode
+        theme_mode: formData.themeMode,
+        owner_id: newOwnerId // Assign the newly created user as the owner
       };
 
       const response = await fetch(`${supabaseUrl}/rest/v1/brands`, {
@@ -153,7 +185,9 @@ export default function AddBrandPage() {
         textPrimary: '#FFFFFF',
         textSecondary: '#71717A',
         themeMode: 'dark',
-        codeAllocation: 100
+        codeAllocation: 100,
+        ownerEmail: '',
+        ownerPassword: ''
       });
     } catch (err) {
       console.error('API Error:', err);
@@ -175,14 +209,16 @@ export default function AddBrandPage() {
       <div className="max-w-6xl mx-auto mb-10 relative z-10">
         <h2 className="text-blue-500 font-bold tracking-widest uppercase text-sm mb-2">LOS Admin Panel</h2>
         <h1 className="text-4xl md:text-5xl font-black text-white">Add New Brand</h1>
-        <p className="text-gray-400 mt-3">Register a new partner brand and generate their initial QR codes.</p>
+        <p className="text-gray-400 mt-3">Register a new partner brand, generate their access portal, and initialize codes.</p>
       </div>
 
       <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 relative z-10">
         
         {/* LEFT COLUMN: FORM */}
-        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.5)]">
+        <div className="bg-white/5 backdrop-blur-md border border-white/10 rounded-3xl p-8 shadow-[0_8px_30px_rgb(0,0,0,0.5)] h-fit max-h-[80vh] overflow-y-auto custom-scrollbar">
           <form onSubmit={handleSubmit} className="space-y-6">
+            
+            <h3 className="text-xl font-bold border-b border-white/10 pb-2 mb-4">1. Brand Identity</h3>
             
             {/* Brand Name */}
             <div>
@@ -292,7 +328,7 @@ export default function AddBrandPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pb-6 border-b border-white/10">
               {/* Theme Mode */}
               <div>
                 <label className="block text-sm font-semibold text-gray-300 mb-2">Theme Mode</label>
@@ -322,7 +358,42 @@ export default function AddBrandPage() {
               </div>
             </div>
 
-            <div className="pt-4">
+            <h3 className="text-xl font-bold border-b border-white/10 pb-2 mt-8 mb-4">2. Brand Owner Access</h3>
+            <p className="text-xs text-blue-400 mb-4 bg-blue-500/10 p-3 rounded-lg border border-blue-500/20">
+              Provide an email and password to automatically create a Supabase Auth user for this brand owner. They will use these to log into /brand-dashboard.
+            </p>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Owner Email */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-300 mb-2">Owner Email</label>
+                <input 
+                  type="email" 
+                  name="ownerEmail"
+                  value={formData.ownerEmail}
+                  onChange={handleChange}
+                  required
+                  placeholder="owner@brand.com"
+                  className="w-full bg-black/50 border border-white/20 rounded-xl p-4 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                />
+              </div>
+
+              {/* Owner Password */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-300 mb-2">Owner Password</label>
+                <input 
+                  type="text" 
+                  name="ownerPassword"
+                  value={formData.ownerPassword}
+                  onChange={handleChange}
+                  required
+                  placeholder="SecurePass123!"
+                  className="w-full bg-black/50 border border-white/20 rounded-xl p-4 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                />
+              </div>
+            </div>
+
+            <div className="pt-8">
               <button 
                 type="submit" 
                 disabled={isSubmitting}
@@ -335,7 +406,7 @@ export default function AddBrandPage() {
                     <LoaderIcon /> Processing...
                   </>
                 ) : (
-                  'Register Brand & Generate Codes'
+                  'Register Brand & Generate Access'
                 )}
               </button>
             </div>
@@ -408,7 +479,23 @@ export default function AddBrandPage() {
         <CheckCircleIcon />
         <span className="font-medium">{toastMessage}</span>
       </div>
-
+      
+      {/* ADD STYLES FOR CUSTOM SCROLLBAR IN LEFT PANEL */}
+      <style>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background-color: rgba(255, 255, 255, 0.1);
+          border-radius: 10px;
+        }
+        .custom-scrollbar:hover::-webkit-scrollbar-thumb {
+          background-color: rgba(255, 255, 255, 0.2);
+        }
+      `}</style>
     </div>
   );
 }
