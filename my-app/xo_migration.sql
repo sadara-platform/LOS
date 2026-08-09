@@ -15,11 +15,11 @@ SECURITY DEFINER
 AS $$
 DECLARE
     v_match xo_matches%ROWTYPE;
-    v_board TEXT[];
+    v_board JSONB;
     v_history JSONB;
     v_popped_index INT;
     v_winner TEXT := NULL;
-    v_winning_cells INT[] := NULL;
+    v_winning_cells JSONB := NULL;
     v_status TEXT;
     
     -- Variables for win checking
@@ -29,7 +29,7 @@ DECLARE
         [0,4,8], [2,4,6]           -- Diagonals
     ];
     i INT;
-    v_a INT; v_b INT; v_c INT;
+    v_a TEXT; v_b TEXT; v_c TEXT;
 BEGIN
     -- 1. Fetch match and validate
     SELECT * INTO v_match FROM xo_matches WHERE id = p_match_id FOR UPDATE;
@@ -46,7 +46,8 @@ BEGIN
         RAISE EXCEPTION 'Not your turn';
     END IF;
     
-    IF v_match.board[p_index + 1] != '' THEN
+    -- In JSONB, check if cell is not empty string
+    IF (v_match.board->>p_index) != '' THEN
         RAISE EXCEPTION 'Cell is already occupied';
     END IF;
 
@@ -55,27 +56,27 @@ BEGIN
     
     -- 2. Handle Queue Logic (FIFO)
     IF p_role = 'X' THEN
-        v_history := v_match.history_x;
+        v_history := COALESCE(v_match.history_x, '[]'::jsonb);
         v_history := v_history || to_jsonb(p_index);
         
         -- If queue length > 3, pop oldest and clear board
         IF jsonb_array_length(v_history) > 3 THEN
             v_popped_index := (v_history->0)::INT;
             v_history := v_history - 0; -- Remove 0th element
-            v_board[v_popped_index + 1] := ''; -- Postgres arrays are 1-indexed!
+            v_board := jsonb_set(v_board, ARRAY[v_popped_index::text], '""'::jsonb);
         END IF;
         
         -- Update the specific queue
         UPDATE xo_matches SET history_x = v_history WHERE id = p_match_id;
     ELSE
-        v_history := v_match.history_o;
+        v_history := COALESCE(v_match.history_o, '[]'::jsonb);
         v_history := v_history || to_jsonb(p_index);
         
         -- If queue length > 3, pop oldest and clear board
         IF jsonb_array_length(v_history) > 3 THEN
             v_popped_index := (v_history->0)::INT;
             v_history := v_history - 0; -- Remove 0th element
-            v_board[v_popped_index + 1] := ''; -- Postgres arrays are 1-indexed!
+            v_board := jsonb_set(v_board, ARRAY[v_popped_index::text], '""'::jsonb);
         END IF;
         
         -- Update the specific queue
@@ -83,25 +84,26 @@ BEGIN
     END IF;
 
     -- 3. State Mutation
-    v_board[p_index + 1] := p_role;
+    v_board := jsonb_set(v_board, ARRAY[p_index::text], to_jsonb(p_role));
     
     -- 4. Win Condition Check
     FOR i IN 1..8 LOOP
-        v_a := v_lines[i][1] + 1;
-        v_b := v_lines[i][2] + 1;
-        v_c := v_lines[i][3] + 1;
+        v_a := v_board->>(v_lines[i][1]);
+        v_b := v_board->>(v_lines[i][2]);
+        v_c := v_board->>(v_lines[i][3]);
         
-        IF v_board[v_a] != '' AND v_board[v_a] = v_board[v_b] AND v_board[v_a] = v_board[v_c] THEN
-            v_winner := v_board[v_a];
-            v_winning_cells := ARRAY[v_a - 1, v_b - 1, v_c - 1]; -- Convert back to 0-indexed for JS
+        IF v_a != '' AND v_a = v_b AND v_a = v_c THEN
+            v_winner := v_a;
+            v_winning_cells := to_jsonb(ARRAY[v_lines[i][1], v_lines[i][2], v_lines[i][3]]);
             EXIT;
         END IF;
     END LOOP;
     
-    -- Check draw (fallback, though rare in infinite xo unless someone explicitly gives up)
-    IF v_winner IS NULL AND NOT ('' = ANY(v_board)) THEN
+    -- Check draw
+    IF v_winner IS NULL AND NOT (v_board @> '""'::jsonb) THEN
+        -- Though rare, if no empty string is found
         v_winner := 'draw';
-        v_winning_cells := ARRAY[]::INT[];
+        v_winning_cells := '[]'::jsonb;
     END IF;
     
     -- 5. Final Update

@@ -32,6 +32,7 @@ class GlobalErrorBoundary extends React.Component {
 const TournamentLandingPage = lazy(() => import('./TournamentLandingPage'));
 const BrandActivationPage = lazy(() => import('./BrandActivationPage'));
 const AddBrandPage = lazy(() => import('./AddBrandPage'));
+const BrandOwnerDashboard = lazy(() => import('./BrandOwnerDashboard'));
 const TournamentController = lazy(() => import('./TournamentController'));
 const AdminLayout = lazy(() => import('./AdminLayout'));
 const BrandList = lazy(() => import('./BrandList'));
@@ -54,6 +55,7 @@ function App() {
           <Route path="/" element={<TournamentLandingPage />} />
           <Route path="/:brandId" element={<BrandActivationPage />} />
           <Route path="/arena" element={<XoArena />} />
+          <Route path="/brand-dashboard" element={<BrandOwnerDashboard />} />
           
           {/* Admin Routes with Persistent Layout */}
           <Route path="/admin" element={<AdminLayout />}>
