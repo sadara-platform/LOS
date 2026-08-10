@@ -285,6 +285,7 @@ export default function BrandActivationPage() {
 
   return (
     <div 
+      dir="rtl"
       className={`min-h-screen font-sans selection:bg-brand-red selection:text-white bg-brand-bg text-brand-text`}
       style={themeVars}
     >
@@ -343,7 +344,7 @@ export default function BrandActivationPage() {
                 placeholder="SEARCH ARCHIVE..." 
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="bg-brand-surface border border-white/10 text-xs text-brand-text rounded-md px-3 py-1.5 w-40 md:w-56 focus:outline-none focus:border-brand-red/50 uppercase tracking-wider mr-2 font-display"
+                className="bg-brand-surface border border-white/10 text-xs text-brand-text rounded-md px-3 py-1.5 w-40 md:w-56 focus:outline-none focus:border-brand-red/50 uppercase tracking-wider me-2 font-display"
               />
             )}
             <button 
@@ -381,7 +382,7 @@ export default function BrandActivationPage() {
           >
             <ShoppingBag className="w-5 h-5 text-brand-light" />
             {totalCartItems > 0 && (
-              <span className="absolute -top-1 -right-1 bg-brand-secondary text-white text-[9px] font-bold w-4.5 h-4.5 rounded-full flex items-center justify-center font-display border border-brand-dark">
+              <span className="absolute -top-1 -end-1 bg-brand-secondary text-white text-[9px] font-bold w-4.5 h-4.5 rounded-full flex items-center justify-center font-display border border-brand-dark">
                 {totalCartItems}
               </span>
             )}
@@ -396,8 +397,8 @@ export default function BrandActivationPage() {
         <div className="max-w-7xl mx-auto bg-brand-charcoal border border-white/5 rounded-[40px] md:rounded-[80px] p-6 md:p-12 relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-12 min-h-[580px]">
           
           {/* Subtle Cybernetic Red Backlight Glow */}
-          <div className="absolute top-1/4 -right-20 w-80 h-80 bg-brand-red/10 rounded-full blur-3xl pointer-events-none"></div>
-          <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-brand-red/5 rounded-full blur-3xl pointer-events-none"></div>
+          <div className="absolute top-1/4 -end-20 w-80 h-80 bg-brand-red/10 rounded-full blur-3xl pointer-events-none"></div>
+          <div className="absolute -bottom-20 -start-20 w-80 h-80 bg-brand-red/5 rounded-full blur-3xl pointer-events-none"></div>
 
           {/* BACKGROUND TEXT BEHIND MODEL */}
           <div className="absolute inset-0 flex flex-col justify-center items-center pointer-events-none select-none opacity-[0.04] md:opacity-[0.07] z-0">
@@ -406,7 +407,7 @@ export default function BrandActivationPage() {
           </div>
 
           {/* Left Editorial Info Block */}
-          <div className="w-full lg:w-5/12 z-10 space-y-6 text-left relative">
+          <div className="w-full lg:w-5/12 z-10 space-y-6 text-start relative">
             <div className="inline-flex items-center gap-2 bg-brand-secondary/10 border border-brand-secondary/25 px-4 py-1 rounded-full">
               <span className="w-1.5 h-1.5 bg-brand-secondary rounded-full animate-pulse"></span>
               <span className="text-[10px] tracking-widest font-bold uppercase text-brand-secondary font-display">{cmsConfig.heroLabel || 'NEW EXPANSION 03.1'}</span>
@@ -458,8 +459,8 @@ export default function BrandActivationPage() {
               />
               {/* Overlay styling elements */}
               <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/80 via-transparent to-transparent"></div>
-              <div className="absolute bottom-6 left-6 right-6 flex justify-between items-end">
-                <div className="text-left">
+              <div className="absolute bottom-6 start-6 end-6 flex justify-between items-end">
+                <div className="text-start">
                   <span className="text-[10px] text-brand-red tracking-widest font-bold block uppercase font-display">
                     {activeHeroLook === 0 ? 'LOOK 01' : activeHeroLook === 1 ? 'LOOK 02' : 'LOOK 03'}
                   </span>
@@ -566,7 +567,7 @@ export default function BrandActivationPage() {
                     {/* Like button absolute */}
                     <button 
                       onClick={() => toggleWishlist(product.id)}
-                      className="absolute top-4 right-4 bg-brand-dark/80 backdrop-blur-md p-2 rounded-full border border-white/10 hover:border-brand-red transition-all text-brand-light"
+                      className="absolute top-4 end-4 bg-brand-dark/80 backdrop-blur-md p-2 rounded-full border border-white/10 hover:border-brand-red transition-all text-brand-light"
                     >
                       <Heart className={`w-4.5 h-4.5 transition-colors ${wishlist.includes(product.id) ? 'fill-brand-red text-brand-red' : 'text-white'}`} />
                     </button>
@@ -574,7 +575,7 @@ export default function BrandActivationPage() {
 
                   {/* Labeled styling recreating screenshot text: "Nasy Trek / Dem 0.1", etc */}
                   <div className="w-full mt-5 flex justify-between items-center px-1">
-                    <div className="text-left">
+                    <div className="text-start">
                       <h4 className="font-display font-bold text-lg tracking-wider text-brand-light leading-none">
                         {mockScreenshotLabel.label}
                       </h4>
@@ -582,7 +583,7 @@ export default function BrandActivationPage() {
                         {mockScreenshotLabel.sub}
                       </span>
                     </div>
-                    <div className="text-right">
+                    <div className="text-end">
                       <span className="text-brand-red font-bold text-sm block font-display">
                         ${product.price}
                       </span>
@@ -644,19 +645,19 @@ export default function BrandActivationPage() {
                     referrerPolicy="no-referrer"
                   />
                   {/* Exact red tag overlay reproducing code pills like "SE3P" from image */}
-                  <div className="absolute bottom-4 left-4 bg-brand-red text-white text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1.5 shadow-md">
+                  <div className="absolute bottom-4 start-4 bg-brand-red text-white text-[10px] font-bold px-3 py-1 rounded-full flex items-center gap-1.5 shadow-md">
                     <span className="w-1.5 h-1.5 bg-white rounded-full animate-ping"></span>
                     <span className="font-display tracking-wider uppercase">{product.sku}</span>
                   </div>
 
-                  <div className="absolute top-4 right-4">
+                  <div className="absolute top-4 end-4">
                     <span className="bg-brand-dark/80 backdrop-blur-md text-brand-light text-[10px] font-bold px-2.5 py-1.5 rounded-md border border-white/10 font-display">
                       ${product.price}
                     </span>
                   </div>
                 </div>
 
-                <div className="mt-4 flex-grow flex flex-col justify-between space-y-3 text-left">
+                <div className="mt-4 flex-grow flex flex-col justify-between space-y-3 text-start">
                   <div>
                     <span className="text-[10px] text-brand-muted uppercase tracking-widest font-semibold">{product.category}</span>
                     <h4 className="text-base font-semibold tracking-wider text-brand-light uppercase line-clamp-1 mt-1 font-display">
@@ -691,8 +692,8 @@ export default function BrandActivationPage() {
       <section id="ai-stylist" className="bg-brand-dark py-24 px-4 md:px-8 relative overflow-hidden">
         
         {/* Subtle decorative circles mimicking photographic frame lines */}
-        <div className="absolute -top-10 left-10 w-40 h-40 border border-brand-red/10 rounded-full pointer-events-none"></div>
-        <div className="absolute -bottom-10 right-10 w-60 h-60 border border-brand-red/5 rounded-full pointer-events-none"></div>
+        <div className="absolute -top-10 start-10 w-40 h-40 border border-brand-red/10 rounded-full pointer-events-none"></div>
+        <div className="absolute -bottom-10 end-10 w-60 h-60 border border-brand-red/5 rounded-full pointer-events-none"></div>
 
         <div className="max-w-4xl mx-auto text-center space-y-10 relative">
           
@@ -710,7 +711,7 @@ export default function BrandActivationPage() {
           </div>
 
           {/* AI Console UI */}
-          <div className="bg-brand-charcoal border border-white/10 rounded-3xl overflow-hidden shadow-2xl text-left">
+          <div className="bg-brand-charcoal border border-white/10 rounded-3xl overflow-hidden shadow-2xl text-start">
             
             {/* Console Header */}
             <div className="bg-brand-gray border-b border-white/10 px-6 py-4 flex justify-between items-center">
@@ -718,7 +719,7 @@ export default function BrandActivationPage() {
                 <span className="w-3 h-3 rounded-full bg-brand-red"></span>
                 <span className="w-3 h-3 rounded-full bg-brand-muted/40"></span>
                 <span className="w-3 h-3 rounded-full bg-brand-muted/20"></span>
-                <span className="text-xs text-brand-muted tracking-widest font-bold uppercase ml-2">STYLIST SESSION // v3.6-flash</span>
+                <span className="text-xs text-brand-muted tracking-widest font-bold uppercase ms-2">STYLIST SESSION // v3.6-flash</span>
               </div>
               <div className="text-[10px] text-brand-muted font-mono uppercase">STATUS: SECURE CONNECTED</div>
             </div>
@@ -755,7 +756,7 @@ export default function BrandActivationPage() {
               )}
 
               {isAiLoading && (
-                <div className="flex gap-4 items-center pl-14">
+                <div className="flex gap-4 items-center ps-14">
                   <div className="flex space-x-1.5">
                     <div className="w-2 h-2 bg-brand-red rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
                     <div className="w-2 h-2 bg-brand-red rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
@@ -775,7 +776,7 @@ export default function BrandActivationPage() {
                     key={i}
                     onClick={() => handleAskAI(promptText)}
                     disabled={isAiLoading}
-                    className="text-[10px] text-brand-light hover:text-white bg-brand-gray hover:bg-brand-red hover:border-brand-red border border-white/10 px-3.5 py-1.5 rounded-full transition-all text-left disabled:opacity-50 disabled:pointer-events-none"
+                    className="text-[10px] text-brand-light hover:text-white bg-brand-gray hover:bg-brand-red hover:border-brand-red border border-white/10 px-3.5 py-1.5 rounded-full transition-all text-start disabled:opacity-50 disabled:pointer-events-none"
                   >
                     {promptText}
                   </button>
@@ -821,7 +822,7 @@ export default function BrandActivationPage() {
           ></div>
 
           {/* Drawer content */}
-          <div className="relative w-full max-w-lg bg-brand-dark border-l border-white/10 h-full overflow-y-auto flex flex-col shadow-2xl animate-slide-in">
+          <div className="relative w-full max-w-lg bg-brand-dark border-s border-white/10 h-full overflow-y-auto flex flex-col shadow-2xl animate-slide-in">
             <div className="p-6 border-b border-white/5 flex justify-between items-center">
               <div>
                 <span className="text-[10px] text-brand-red font-bold tracking-widest block uppercase font-display">LOS DESIGN REPORT</span>
@@ -935,7 +936,7 @@ export default function BrandActivationPage() {
           ></div>
 
           {/* Drawer content */}
-          <div className="relative w-full max-w-md bg-brand-dark border-l border-white/10 h-full overflow-y-auto flex flex-col shadow-2xl">
+          <div className="relative w-full max-w-md bg-brand-dark border-s border-white/10 h-full overflow-y-auto flex flex-col shadow-2xl">
             <div className="p-6 border-b border-white/5 flex justify-between items-center">
               <div className="flex items-center gap-2">
                 <ShoppingBag className="w-5 h-5 text-brand-red" />
@@ -986,7 +987,7 @@ export default function BrandActivationPage() {
                           referrerPolicy="no-referrer"
                         />
                       </div>
-                      <div className="flex-grow text-left space-y-1">
+                      <div className="flex-grow text-start space-y-1">
                         <h4 className="text-xs font-bold tracking-wider text-brand-light uppercase line-clamp-1 font-display">
                           {item.product.name}
                         </h4>
@@ -1035,7 +1036,7 @@ export default function BrandActivationPage() {
                   <span>SUBTOTAL</span>
                   <span className="text-brand-light font-bold text-lg font-display">${cartSubtotal}</span>
                 </div>
-                <div className="bg-brand-dark p-3.5 rounded-xl border border-white/5 text-[11px] leading-relaxed text-brand-muted text-left">
+                <div className="bg-brand-dark p-3.5 rounded-xl border border-white/5 text-[11px] leading-relaxed text-brand-muted text-start">
                   <div className="flex justify-between items-center font-bold mb-1 text-brand-light">
                     <span>STANDARD INSURED DELIVERY</span>
                     <span className="text-brand-red">COMPLIMENTARY</span>
@@ -1090,13 +1091,13 @@ export default function BrandActivationPage() {
                     
                     <button 
                       onClick={() => toggleWishlist(product.id)}
-                      className="absolute top-4 right-4 bg-brand-dark/80 backdrop-blur-md p-2 rounded-full border border-white/10 hover:border-brand-red transition-all text-brand-light"
+                      className="absolute top-4 end-4 bg-brand-dark/80 backdrop-blur-md p-2 rounded-full border border-white/10 hover:border-brand-red transition-all text-brand-light"
                     >
                       <Heart className={`w-4 h-4 ${wishlist.includes(product.id) ? 'fill-brand-red text-brand-red' : 'text-white'}`} />
                     </button>
                   </div>
 
-                  <div className="mt-5 text-left space-y-2">
+                  <div className="mt-5 text-start space-y-2">
                     <div className="flex justify-between items-center text-[10px] text-brand-muted font-mono tracking-widest">
                       <span>{product.sku}</span>
                       <span className="text-brand-red font-bold uppercase">{product.category}</span>
@@ -1138,7 +1139,7 @@ export default function BrandActivationPage() {
       <footer id="footer" className="bg-brand-charcoal text-brand-light border-t border-white/5 relative">
         
         {/* Newsletter Call-to-action */}
-        <div className="max-w-7xl mx-auto px-4 md:px-8 py-16 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center border-b border-white/5 text-left">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-16 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center border-b border-white/5 text-start">
           <div className="space-y-4">
             <span className="text-[10px] tracking-widest uppercase font-bold text-brand-red">DISPATCH ANNOUNCEMENTS</span>
             <h4 className="text-3xl md:text-4xl font-display font-bold uppercase text-white">
@@ -1165,7 +1166,7 @@ export default function BrandActivationPage() {
         </div>
 
         {/* Traditional Multi-column Footer replicating exact elements and column headers of image */}
-        <div className="max-w-7xl mx-auto px-4 md:px-8 py-20 grid grid-cols-2 md:grid-cols-4 gap-12 text-left">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 py-20 grid grid-cols-2 md:grid-cols-4 gap-12 text-start">
           
           {/* Col 1 */}
           <div className="space-y-6">

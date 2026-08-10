@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../../supabaseClient';
 import { ShoppingBag, Plus, Trash2, Edit2, AlertCircle } from 'lucide-react';
+import ImageUpload from '../../../components/ImageUpload';
 
 export default function ProductsTab({ brand }) {
   const [products, setProducts] = useState([]);
@@ -149,7 +150,10 @@ export default function ProductsTab({ brand }) {
                 
                 <div>
                    <label className="block text-code-sm font-bold tracking-widest text-zinc-400 uppercase mb-2">IMAGE_ASSET_URL</label>
-                   <input value={newProduct.image_url} onChange={e => setNewProduct({...newProduct, image_url: e.target.value})} className="w-full bg-[#0A0A0A] border border-white/10 rounded-lg px-4 py-3 text-primary text-sm focus:outline-none focus:border-brand-accent transition-colors font-code-sm" placeholder="https://..." type="url" />
+                   <ImageUpload 
+                     onUploadSuccess={url => setNewProduct({...newProduct, image_url: url})} 
+                     currentImage={newProduct.image_url} 
+                   />
                 </div>
 
                 <button type="submit" className="mt-4 border border-primary text-primary font-code-sm text-code-sm py-3 rounded-DEFAULT hover:bg-primary/10 transition-colors uppercase tracking-wider w-full">
