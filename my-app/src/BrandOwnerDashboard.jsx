@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from './SupabaseClient';
-import { BarChart3, Users, Ticket, Settings, LogOut, CheckCircle2, AlertCircle } from 'lucide-react';
+import { LogOut, AlertCircle, LayoutDashboard, Ticket, QrCode, Settings } from 'lucide-react';
+
+import AnalyticsTab from './AnalyticsTab';
+import OffersTab from './OffersTab';
+import CodesTab from './CodesTab';
+import SettingsTab from './SettingsTab';
 
 export default function BrandOwnerDashboard() {
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState('analytics');
   
   // Login State
   const [email, setEmail] = useState('');
@@ -13,13 +19,6 @@ export default function BrandOwnerDashboard() {
 
   // Dashboard State
   const [brand, setBrand] = useState(null);
-  const [analytics, setAnalytics] = useState({ totalCodes: 0, activatedCodes: 0, activationRate: 0 });
-  const [offers, setOffers] = useState([]);
-  
-  // Profile Update State
-  const [description, setDescription] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [updateStatus, setUpdateStatus] = useState({ type: '', message: '' });
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -56,7 +55,6 @@ export default function BrandOwnerDashboard() {
   const fetchBrandData = async (user) => {
     setLoading(true);
     try {
-      // Fetch Brand
       const { data: brandData, error: brandError } = await supabase
         .from('brands')
         .select('*')
@@ -65,58 +63,13 @@ export default function BrandOwnerDashboard() {
 
       if (brandError) throw brandError;
       setBrand(brandData);
-      setDescription(brandData.description || '');
-      setPhoneNumber(brandData.phone_number || '');
-
-      // Resilient Fetch for Analytics & Offers (Catch errors if tables don't exist yet)
-      try {
-        const { count: totalCodes } = await supabase.from('codes').select('*', { count: 'exact', head: true }).eq('brand_id', brandData.id);
-        const { count: activatedCodes } = await supabase.from('codes').select('*', { count: 'exact', head: true }).eq('brand_id', brandData.id).eq('status', 'activated');
-        
-        const tot = totalCodes || 0;
-        const act = activatedCodes || 0;
-        setAnalytics({
-          totalCodes: tot,
-          activatedCodes: act,
-          activationRate: tot > 0 ? Math.round((act / tot) * 100) : 0
-        });
-      } catch (err) {
-        console.warn("Codes table might not be set up yet", err);
-      }
-
-      try {
-        const { data: offersData } = await supabase.from('offers').select('*').eq('brand_id', brandData.id);
-        if (offersData) setOffers(offersData);
-      } catch (err) {
-        console.warn("Offers table might not be set up yet", err);
-      }
-
     } catch (err) {
       console.error("Error fetching brand data:", err.message);
-      // It's possible the user is authenticated but not a brand owner
     } finally {
       setLoading(false);
     }
   };
 
-  const handleUpdateProfile = async (e) => {
-    e.preventDefault();
-    setUpdateStatus({ type: 'loading', message: 'Updating...' });
-    
-    const { error } = await supabase
-      .from('brands')
-      .update({ description, phone_number: phoneNumber })
-      .eq('id', brand.id);
-
-    if (error) {
-      setUpdateStatus({ type: 'error', message: error.message });
-    } else {
-      setUpdateStatus({ type: 'success', message: 'Profile updated successfully!' });
-      setTimeout(() => setUpdateStatus({ type: '', message: '' }), 3000);
-    }
-  };
-
-  // UI rendering
   if (loading) {
     return (
       <div className="min-h-screen bg-[#0A0A0A] flex items-center justify-center">
@@ -190,137 +143,86 @@ export default function BrandOwnerDashboard() {
     );
   }
 
-  // Main Dashboard View
+  const navItems = [
+    { id: 'analytics', label: 'Overview', icon: LayoutDashboard },
+    { id: 'offers', label: 'Offers', icon: Ticket },
+    { id: 'codes', label: 'QR Codes', icon: QrCode },
+    { id: 'settings', label: 'Settings', icon: Settings },
+  ];
+
+  // Main Dashboard View with Sidebar
   return (
-    <div className="min-h-screen bg-[#0A0A0A] font-sans text-white">
-      {/* Header */}
-      <header className="bg-[#141414] border-b border-white/5 px-6 py-4 flex justify-between items-center sticky top-0 z-10">
-        <div className="flex items-center gap-4">
-          {brand.logo_url && <img src={brand.logo_url} alt="Logo" className="h-8 w-8 object-contain rounded-md" />}
-          <div>
-            <h1 className="text-xl font-black tracking-wider uppercase leading-none">{brand.name}</h1>
-            <span className="text-[10px] tracking-widest text-zinc-500 uppercase font-bold">Brand Dashboard</span>
-          </div>
-        </div>
-        <button onClick={handleLogout} className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors text-xs font-bold tracking-widest uppercase">
-          <LogOut className="w-4 h-4" />
-          Sign Out
-        </button>
-      </header>
-
-      <main className="max-w-6xl mx-auto p-6 md:p-8 space-y-8">
-        
-        {/* Analytics Section */}
-        <section>
-          <h2 className="text-sm font-bold tracking-widest text-zinc-500 uppercase mb-4 flex items-center gap-2">
-            <BarChart3 className="w-4 h-4" />
-            Performance Analytics
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="bg-[#141414] border border-white/5 p-6 rounded-2xl">
-              <div className="text-zinc-500 text-xs font-bold tracking-widest uppercase mb-1">Total Codes</div>
-              <div className="text-4xl font-black tracking-tighter">{analytics.totalCodes}</div>
-            </div>
-            <div className="bg-[#141414] border border-white/5 p-6 rounded-2xl">
-              <div className="text-zinc-500 text-xs font-bold tracking-widest uppercase mb-1">Activated</div>
-              <div className="text-4xl font-black tracking-tighter text-cyan-400">{analytics.activatedCodes}</div>
-            </div>
-            <div className="bg-[#141414] border border-white/5 p-6 rounded-2xl">
-              <div className="text-zinc-500 text-xs font-bold tracking-widest uppercase mb-1">Activation Rate</div>
-              <div className="text-4xl font-black tracking-tighter text-red-500">{analytics.activationRate}%</div>
+    <div className="min-h-screen bg-[#0A0A0A] font-sans text-white flex flex-col md:flex-row">
+      
+      {/* Mobile Header / Desktop Sidebar */}
+      <aside className="w-full md:w-64 bg-[#141414] border-r border-white/5 flex flex-col md:min-h-screen shrink-0">
+        <div className="p-6 border-b border-white/5 flex items-center justify-between md:flex-col md:items-start md:gap-4">
+          <div className="flex items-center gap-4">
+            {brand.logo_url && <img src={brand.logo_url} alt="Logo" className="h-10 w-10 object-contain rounded-lg bg-black/50 p-1" />}
+            <div>
+              <h1 className="text-lg font-black tracking-wider uppercase leading-none">{brand.name}</h1>
+              <span className="text-[10px] tracking-widest text-zinc-500 uppercase font-bold">Partner Portal</span>
             </div>
           </div>
-        </section>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           
-          {/* Active Offers */}
-          <section>
-            <h2 className="text-sm font-bold tracking-widest text-zinc-500 uppercase mb-4 flex items-center gap-2">
-              <Ticket className="w-4 h-4" />
-              Active Offers
-            </h2>
-            <div className="bg-[#141414] border border-white/5 rounded-2xl overflow-hidden">
-              {offers.length === 0 ? (
-                <div className="p-8 text-center text-zinc-600 text-sm italic">
-                  No active offers found.
-                </div>
-              ) : (
-                <ul className="divide-y divide-white/5">
-                  {offers.map(offer => (
-                    <li key={offer.id} className="p-4 hover:bg-white/5 transition-colors flex justify-between items-center">
-                      <div>
-                        <div className="font-bold tracking-wide">{offer.title}</div>
-                        <div className="text-xs text-zinc-500">{offer.description}</div>
-                      </div>
-                      <span className={`px-2 py-1 rounded text-[10px] font-bold tracking-widest uppercase ${offer.status === 'active' ? 'bg-green-500/20 text-green-400' : 'bg-zinc-800 text-zinc-400'}`}>
-                        {offer.status || 'Active'}
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          </section>
+          <button onClick={handleLogout} className="md:hidden text-zinc-500 hover:text-white">
+            <LogOut className="w-5 h-5" />
+          </button>
+        </div>
 
-          {/* Profile Updates */}
-          <section>
-            <h2 className="text-sm font-bold tracking-widest text-zinc-500 uppercase mb-4 flex items-center gap-2">
-              <Settings className="w-4 h-4" />
-              Basic Profile
-            </h2>
-            <form onSubmit={handleUpdateProfile} className="bg-[#141414] border border-white/5 p-6 rounded-2xl space-y-5">
-              
-              <div className="bg-red-500/5 border border-red-500/10 p-4 rounded-lg flex items-start gap-3 mb-6">
-                <AlertCircle className="w-5 h-5 text-red-400 shrink-0 mt-0.5" />
-                <div className="text-xs text-red-200/70 leading-relaxed">
-                  <strong>Restricted Area.</strong> Visual identity (colors, logo, slug) is locked to preserve platform aesthetics. You may only update textual descriptions and contact links.
-                </div>
-              </div>
+        <nav className="flex-1 overflow-x-auto md:overflow-y-auto custom-scrollbar flex md:flex-col p-4 gap-2 border-b md:border-b-0 border-white/5">
+          {navItems.map(item => {
+            const Icon = item.icon;
+            const isActive = activeTab === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => setActiveTab(item.id)}
+                className={`flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold tracking-widest uppercase transition-all whitespace-nowrap shrink-0 md:w-full text-left
+                  ${isActive ? 'bg-white/10 text-white' : 'text-zinc-500 hover:bg-white/5 hover:text-zinc-300'}
+                `}
+              >
+                <Icon className={`w-4 h-4 ${isActive ? 'text-white' : 'text-zinc-500'}`} />
+                {item.label}
+              </button>
+            )
+          })}
+        </nav>
 
-              <div>
-                <label className="block text-xs font-bold tracking-widest text-zinc-400 uppercase mb-2">Brand Description</label>
-                <textarea 
-                  value={description}
-                  onChange={e => setDescription(e.target.value)}
-                  className="w-full bg-[#0A0A0A] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-colors h-32 resize-none"
-                  placeholder="Describe your brand's role in the tournament..."
-                />
-              </div>
+        <div className="hidden md:block p-4 border-t border-white/5 mt-auto">
+          <button 
+            onClick={handleLogout} 
+            className="flex items-center gap-3 px-4 py-3 rounded-xl text-xs font-bold tracking-widest uppercase text-zinc-500 hover:bg-red-500/10 hover:text-red-400 transition-all w-full text-left"
+          >
+            <LogOut className="w-4 h-4" />
+            Sign Out
+          </button>
+        </div>
+      </aside>
 
-              <div>
-                <label className="block text-xs font-bold tracking-widest text-zinc-400 uppercase mb-2">Support Phone Number</label>
-                <input 
-                  type="text"
-                  value={phoneNumber}
-                  onChange={e => setPhoneNumber(e.target.value)}
-                  className="w-full bg-[#0A0A0A] border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-white/30 transition-colors"
-                  placeholder="+1 (555) 000-0000"
-                />
-              </div>
-
-              <div className="pt-2 flex items-center justify-between">
-                <div>
-                  {updateStatus.message && (
-                    <span className={`text-xs font-bold tracking-widest uppercase flex items-center gap-1 ${updateStatus.type === 'success' ? 'text-green-400' : updateStatus.type === 'error' ? 'text-red-400' : 'text-zinc-400'}`}>
-                      {updateStatus.type === 'success' && <CheckCircle2 className="w-3 h-3" />}
-                      {updateStatus.message}
-                    </span>
-                  )}
-                </div>
-                <button 
-                  type="submit" 
-                  disabled={updateStatus.type === 'loading'}
-                  className="bg-white hover:bg-zinc-200 text-black font-bold tracking-widest uppercase px-6 py-3 rounded-lg transition-colors text-xs disabled:opacity-50"
-                >
-                  Save Changes
-                </button>
-              </div>
-            </form>
-          </section>
-
+      {/* Main Content Area */}
+      <main className="flex-1 p-6 md:p-10 overflow-y-auto">
+        <div className="max-w-5xl mx-auto">
+          {activeTab === 'analytics' && <AnalyticsTab brand={brand} />}
+          {activeTab === 'offers' && <OffersTab brand={brand} />}
+          {activeTab === 'codes' && <CodesTab brand={brand} />}
+          {activeTab === 'settings' && <SettingsTab brand={brand} onBrandUpdate={setBrand} />}
         </div>
       </main>
+
+      <style>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          height: 4px;
+          width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background-color: rgba(255, 255, 255, 0.1);
+          border-radius: 10px;
+        }
+      `}</style>
     </div>
   );
 }
