@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Neon Nexus - QR Codes Log</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Anybody:wght@800;900&amp;family=Geist:wght@400;600&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-fixed-dim": "#ecb2ff",
+                    "tertiary-container": "#cf5cff",
+                    "secondary-fixed-dim": "#00dbe9",
+                    "surface-container": "#201f1f",
+                    "on-secondary-fixed-variant": "#004f54",
+                    "secondary-fixed": "#7df4ff",
+                    "on-surface-variant": "#e8bcbe",
+                    "tertiary": "#ecb2ff",
+                    "inverse-surface": "#e5e2e1",
+                    "surface-container-high": "#2a2a2a",
+                    "on-primary-fixed-variant": "#91002d",
+                    "surface-variant": "#353534",
+                    "on-secondary-fixed": "#002022",
+                    "on-secondary": "#00363a",
+                    "surface-dim": "#131313",
+                    "primary": "#ffb2b8",
+                    "on-primary": "#67001d",
+                    "on-tertiary-container": "#480063",
+                    "on-surface": "#e5e2e1",
+                    "on-error-container": "#ffdad6",
+                    "surface-tint": "#ffb2b8",
+                    "on-tertiary": "#520071",
+                    "surface-bright": "#3a3939",
+                    "surface": "#131313",
+                    "surface-container-lowest": "#0e0e0e",
+                    "inverse-on-surface": "#313030",
+                    "on-primary-container": "#5b0018",
+                    "on-secondary-container": "#00686f",
+                    "background": "#131313",
+                    "surface-container-low": "#1c1b1b",
+                    "on-error": "#690005",
+                    "secondary-container": "#00eefc",
+                    "inverse-primary": "#be003d",
+                    "on-tertiary-fixed": "#320047",
+                    "on-primary-fixed": "#40000f",
+                    "surface-container-highest": "#353534",
+                    "on-background": "#e5e2e1",
+                    "error-container": "#93000a",
+                    "on-tertiary-fixed-variant": "#74009f",
+                    "primary-fixed": "#ffdadb",
+                    "tertiary-fixed": "#f8d8ff",
+                    "outline": "#ae8789",
+                    "primary-fixed-dim": "#ffb2b8",
+                    "primary-container": "#ff506e",
+                    "error": "#ffb4ab",
+                    "outline-variant": "#5e3e41",
+                    "secondary": "#d3fbff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "margin-mobile": "20px",
+                    "margin-desktop": "64px",
+                    "container-max": "1440px",
+                    "stack-unit": "8px"
+            },
+            "fontFamily": {
+                    "code-sm": [
+                            "JetBrains Mono"
+                    ],
+                    "headline-lg": [
+                            "Anybody"
+                    ],
+                    "body-lg": [
+                            "Geist"
+                    ],
+                    "title-md": [
+                            "Geist"
+                    ],
+                    "body-md": [
+                            "Geist"
+                    ],
+                    "headline-lg-mobile": [
+                            "Anybody"
+                    ],
+                    "display-xl": [
+                            "Anybody"
+                    ]
+            },
+            "fontSize": {
+                    "code-sm": [
+                            "14px",
+                            {
+                                    "lineHeight": "20px",
+                                    "letterSpacing": "0.02em",
+                                    "fontWeight": "500"
+                            }
+                    ],
+                    "headline-lg": [
+                            "48px",
+                            {
+                                    "lineHeight": "56px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "800"
+                            }
+                    ],
+                    "body-lg": [
+                            "18px",
+                            {
+                                    "lineHeight": "28px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "title-md": [
+                            "20px",
+                            {
+                                    "lineHeight": "28px",
+                                    "letterSpacing": "0.05em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "body-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "24px",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "headline-lg-mobile": [
+                            "32px",
+                            {
+                                    "lineHeight": "36px",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "800"
+                            }
+                    ],
+                    "display-xl": [
+                            "80px",
+                            {
+                                    "lineHeight": "80px",
+                                    "letterSpacing": "-0.04em",
+                                    "fontWeight": "900"
+                            }
+                    ]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #0A0A0A;
+            color: #e5e2e1;
+        }
+        
+        .neon-shadow-primary {
+            box-shadow: 0 0 15px rgba(255, 0, 85, 0.4);
+        }
+
+        .neon-text-primary {
+            color: #FF0055;
+            text-shadow: 0 0 10px rgba(255, 0, 85, 0.5);
+        }
+
+        .neon-text-error {
+            color: #ffb4ab;
+            text-shadow: 0 0 10px rgba(255, 180, 171, 0.5);
+        }
+
+        .neon-text-success {
+            color: #00ff88;
+            text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .terminal-input:focus {
+            outline: none;
+            border-bottom-color: #FF0055;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .cursor-blink {
+            animation: blink 1s step-end infinite;
+        }
+
+        /* Hide scrollbar for side nav but allow scroll */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden font-body-md text-body-md selection:bg-primary-container selection:text-white">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/80 backdrop-blur-xl border-b border-white/10 shadow-[0_0_20px_rgba(255,0,85,0.2)] flex justify-between items-center px-margin-desktop py-4 w-full md:flex hidden">
+<div class="flex items-center gap-8">
+<span class="font-display-xl text-display-xl font-black text-primary tracking-tighter" style="font-size: 2rem; line-height: 1;">NEON NEXUS</span>
+<div class="flex gap-6">
+<a class="text-on-surface-variant hover:text-on-surface transition-colors font-body-md text-body-md py-1" href="#">Dashboard</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors font-body-md text-body-md py-1" href="#">Analytics</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors font-body-md text-body-md py-1" href="#">Campaigns</a>
+<a class="text-on-surface-variant hover:text-on-surface transition-colors font-body-md text-body-md py-1" href="#">Users</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-primary hover:bg-white/5 transition-all duration-300 active:scale-95 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-primary hover:bg-white/5 transition-all duration-300 active:scale-95 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="w-10 h-10 rounded-full bg-surface-container overflow-hidden border border-white/10 ml-2">
+<img alt="User Profile Avatar" class="w-full h-full object-cover" data-alt="Cyberpunk avatar of a digital operator with neon accents and futuristic eyewear, deep blacks and intense neon pink highlights, professional high-end render." src="https://lh3.googleusercontent.com/aida-public/AB6AXuATAhC_iaRbbhIsOKmnQ1HdAvHGxXfP4eBeB000rgPCRvLbxQmx7xn6sRtxAvlc0P3AbdPgtDlf2GxdKiSN1irIsSpe4Kn19cG8vk60z6u3q5vnHnZVyJrnznkmg-J5cA-rTxip8IndhB9MeCVnGjCfHsNuQDBc_qekr5djdfUx2o8jSOpBZN69OpaBYLJrreKOZeqH6VD3-3aGHFdTrtrM9HIPdW2hPZwD538F_cxCWtymIO8qoHLNicg7rjGE8_sn0fRdVUnVbpk"/>
+</div>
+</div>
+</nav>
+<!-- SideNavBar -->
+<aside class="fixed left-0 h-full w-64 z-40 bg-surface/90 backdrop-blur-2xl border-r border-white/10 shadow-2xl flex flex-col h-full py-stack-unit gap-4 pt-[80px] hidden md:flex">
+<div class="px-6 py-6 border-b border-white/10 mb-4">
+<div class="flex items-center gap-4 mb-2">
+<div class="w-12 h-12 rounded-lg bg-surface-container-high border border-white/10 overflow-hidden flex-shrink-0">
+<img alt="Organization Logo" class="w-full h-full object-cover" data-alt="Abstract glowing geometric logo mark in neon pink and white, set against a dark void background, high-contrast modern design." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgwnjnraTed4ASswOk0bELYmNdRvB4lYqEulc3kTpZg_ltaxuDN85ALHbFK1u_cL0F0xMdGYtzkxZYwMgK6CsEPQshr0nTiAQ1M58C36ja8EJ_U_gYStm3n1xDJSoZKyhomHLSlKsYyWHaUsyr7RYLYPOSyLSdL5D8s8sfVcPHHOurBV0NnnHKtOXpyNvMALcDMIIJ_BVtTsXS1atXT4UmR98QWAVoUi1ENvXK14ov31U_MJ8X9h2eexiCB4XmjsbK04gSoksHKFc"/>
+</div>
+<div>
+<h2 class="font-headline-lg text-headline-lg font-black text-primary text-[1.2rem] leading-tight">NEON NEXUS</h2>
+<p class="font-code-sm text-code-sm text-on-surface-variant text-[0.75rem]">ELITE_CORE_V1</p>
+</div>
+</div>
+<button class="w-full mt-4 bg-primary-container/20 border border-primary-container text-primary font-code-sm text-code-sm py-2 rounded uppercase tracking-widest hover:bg-primary-container/30 transition-colors">
+                LAUNCH_SCAN
+            </button>
+</div>
+<div class="flex-1 overflow-y-auto no-scrollbar px-3">
+<nav class="flex flex-col gap-1 font-code-sm text-code-sm">
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary/70 hover:bg-white/5 hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[1.2rem]" data-icon="dashboard">dashboard</span>
+                    Overview
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary/70 hover:bg-white/5 hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[1.2rem]" data-icon="sensors">sensors</span>
+                    Live Feed
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary/70 hover:bg-white/5 hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[1.2rem]" data-icon="leaderboard">leaderboard</span>
+                    Analytics
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary/70 hover:bg-white/5 hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[1.2rem]" data-icon="shield">shield</span>
+                    Security
+                </a>
+<a class="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary/10 text-primary border-r-4 border-primary hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined text-[1.2rem]" data-icon="terminal">terminal</span>
+                    System
+                </a>
+</nav>
+</div>
+<div class="px-3 pb-6 mt-auto">
+<div class="border-t border-white/10 pt-4 flex flex-col gap-1 font-code-sm text-code-sm">
+<a class="flex items-center gap-3 px-4 py-2 rounded-lg text-on-surface-variant hover:text-primary/70 hover:bg-white/5 hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[1.2rem]" data-icon="help">help</span>
+                    Support
+                </a>
+<a class="flex items-center gap-3 px-4 py-2 rounded-lg text-on-surface-variant hover:text-primary/70 hover:bg-white/5 hover:translate-x-1 transition-all duration-200" href="#">
+<span class="material-symbols-outlined text-[1.2rem]" data-icon="logout">logout</span>
+                    Logout
+                </a>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 h-full overflow-y-auto bg-[#0A0A0A] pt-24 pb-12 md:pl-64">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop flex flex-col gap-[60px]">
+<!-- Header Section -->
+<section class="flex flex-col gap-6 md:flex-row md:items-end md:justify-between border-b border-white/5 pb-8">
+<div class="flex items-center gap-4 flex-wrap">
+<h1 class="font-headline-lg text-headline-lg font-black neon-text-primary tracking-tighter uppercase m-0 leading-none">
+                        QR_CODES_LOG
+                    </h1>
+<span class="font-code-sm text-code-sm text-error bg-error-container/20 border border-error/50 px-3 py-1 rounded-sm tracking-widest neon-text-error">
+                        [READ_ONLY_MODE]
+                    </span>
+</div>
+<!-- Terminal Search -->
+<div class="relative w-full md:w-96 flex items-center font-code-sm text-code-sm group">
+<span class="text-primary mr-2 font-bold">&gt;</span>
+<input class="w-full bg-transparent border-0 border-b-2 border-surface-variant text-on-surface placeholder:text-on-surface-variant/50 focus:ring-0 terminal-input py-2 transition-colors uppercase tracking-wider" placeholder="SEARCH_CODE_" type="text"/>
+<span class="absolute right-0 bottom-2 w-2 h-4 bg-primary cursor-blink hidden group-focus-within:block"></span>
+</div>
+</section>
+<!-- Data Table Section -->
+<section class="glass-panel rounded-xl overflow-hidden p-[1px]">
+<div class="bg-[#171717]/95 rounded-xl overflow-x-auto">
+<table class="w-full text-left border-collapse min-w-[800px]">
+<thead>
+<tr class="border-b border-white/10 font-code-sm text-code-sm text-on-surface-variant bg-surface-container-low/50">
+<th class="py-4 px-6 font-medium tracking-widest uppercase">Code</th>
+<th class="py-4 px-6 font-medium tracking-widest uppercase">Status</th>
+<th class="py-4 px-6 font-medium tracking-widest uppercase">Claimed By</th>
+<th class="py-4 px-6 font-medium tracking-widest uppercase text-right">Created At</th>
+</tr>
+</thead>
+<tbody class="font-code-sm text-code-sm divide-y divide-white/5">
+<!-- Row 1 -->
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="py-4 px-6 tabular-nums font-bold text-on-surface">NX-8829-X</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 border border-[#00ff88]/30 px-2.5 py-0.5 rounded-full text-[12px] bg-[#00ff88]/10 neon-text-success">
+<span class="w-1.5 h-1.5 rounded-full bg-[#00ff88] animate-pulse"></span>
+                                        ACTIVATED
+                                    </span>
+</td>
+<td class="py-4 px-6 text-on-surface-variant">USER_ALPHA_9</td>
+<td class="py-4 px-6 tabular-nums text-right text-on-surface-variant/70 group-hover:text-primary transition-colors">2024.08.12 14:30</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="py-4 px-6 tabular-nums font-bold text-on-surface">NX-1044-Y</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 border border-surface-variant px-2.5 py-0.5 rounded-full text-[12px] text-on-surface-variant">
+<span class="w-1.5 h-1.5 rounded-full bg-surface-variant"></span>
+                                        PENDING
+                                    </span>
+</td>
+<td class="py-4 px-6 text-on-surface-variant opacity-40">--</td>
+<td class="py-4 px-6 tabular-nums text-right text-on-surface-variant/70 group-hover:text-primary transition-colors">2024.08.12 11:15</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="py-4 px-6 tabular-nums font-bold text-on-surface">NX-9932-Z</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 border border-[#FF0055]/30 px-2.5 py-0.5 rounded-full text-[12px] bg-[#FF0055]/10 neon-text-primary">
+<span class="w-1.5 h-1.5 rounded-full bg-[#FF0055]"></span>
+                                        EXPIRED
+                                    </span>
+</td>
+<td class="py-4 px-6 text-on-surface-variant">GUEST_0442</td>
+<td class="py-4 px-6 tabular-nums text-right text-on-surface-variant/70 group-hover:text-primary transition-colors">2024.08.11 09:00</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="py-4 px-6 tabular-nums font-bold text-on-surface">NX-5510-A</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 border border-[#00ff88]/30 px-2.5 py-0.5 rounded-full text-[12px] bg-[#00ff88]/10 neon-text-success">
+<span class="w-1.5 h-1.5 rounded-full bg-[#00ff88] animate-pulse"></span>
+                                        ACTIVATED
+                                    </span>
+</td>
+<td class="py-4 px-6 text-on-surface-variant">SYS_ADMIN</td>
+<td class="py-4 px-6 tabular-nums text-right text-on-surface-variant/70 group-hover:text-primary transition-colors">2024.08.10 22:45</td>
+</tr>
+<!-- Row 5 -->
+<tr class="hover:bg-white/5 transition-colors group">
+<td class="py-4 px-6 tabular-nums font-bold text-on-surface">NX-2201-B</td>
+<td class="py-4 px-6">
+<span class="inline-flex items-center gap-1.5 border border-surface-variant px-2.5 py-0.5 rounded-full text-[12px] text-on-surface-variant">
+<span class="w-1.5 h-1.5 rounded-full bg-surface-variant"></span>
+                                        PENDING
+                                    </span>
+</td>
+<td class="py-4 px-6 text-on-surface-variant opacity-40">--</td>
+<td class="py-4 px-6 tabular-nums text-right text-on-surface-variant/70 group-hover:text-primary transition-colors">2024.08.10 18:20</td>
+</tr>
+</tbody>
+</table>
+<div class="px-6 py-4 border-t border-white/5 flex justify-between items-center font-code-sm text-code-sm text-on-surface-variant">
+<span>SHOWING 5 OF 1,024 RECORDS</span>
+<div class="flex gap-4">
+<button class="hover:text-primary transition-colors disabled:opacity-50 disabled:hover:text-on-surface-variant" disabled="">PREV</button>
+<span class="text-on-surface">01 / 205</span>
+<button class="hover:text-primary transition-colors">NEXT</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+</body></html>

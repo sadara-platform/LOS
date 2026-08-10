@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Neon Nexus - CMS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Anybody:wght@400;800;900&amp;family=Geist:wght@400;600&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            background-color: #0A0A0A;
+            color: #e5e2e1;
+        }
+        /* Base Glass Layer */
+        .glass-panel {
+            background-color: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Glass Card with Gradient Border simulation */
+        .glass-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(32px);
+            -webkit-backdrop-filter: blur(32px);
+            border: 1px solid;
+            border-image-source: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,0,85,0.4) 100%);
+            border-image-slice: 1;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), backdrop-filter 0.3s ease;
+        }
+        .glass-card:hover {
+            transform: translateY(-8px);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+        }
+
+        /* Neon Glows */
+        .neon-shadow {
+            box-shadow: 0 0 15px 0 rgba(255, 0, 85, 0.4);
+        }
+        .neon-shadow-intense {
+            box-shadow: 0 0 30px 0 rgba(255, 0, 85, 0.6);
+        }
+        
+        /* Terminal Input Styling */
+        .terminal-input-group {
+            position: relative;
+            margin-bottom: 24px;
+        }
+        .terminal-label {
+            display: block;
+            margin-bottom: 8px;
+            color: rgba(255, 0, 85, 0.8); /* Dimmed primary */
+        }
+        .terminal-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid rgba(255, 0, 85, 0.3);
+            color: #e5e2e1;
+            padding: 8px 0;
+            outline: none;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .terminal-input:focus {
+            border-bottom-color: #FF0055;
+            box-shadow: 0 4px 15px -4px rgba(255, 0, 85, 0.4);
+            /* border-bottom removal needed for focus ring to not look weird, but keeping simple for now */
+            box-shadow: none; /* override tailwind forms if needed, keeping manual bottom border */
+        }
+        
+        /* Massive CTA */
+        .massive-cta {
+            background-color: #FF0055;
+            color: #ffffff;
+            padding: 20px 40px;
+            text-transform: uppercase;
+            box-shadow: 0 0 15px 0 rgba(255, 0, 85, 0.4);
+            transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+            border: none;
+            cursor: pointer;
+        }
+        .massive-cta:hover {
+            transform: scale(1.05) translateY(-4px);
+            box-shadow: 0 0 30px 0 rgba(255, 0, 85, 0.8);
+        }
+
+        /* Utility classes for specific Material Symbols styling if needed */
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-tertiary": "#520071",
+                      "tertiary-container": "#cf5cff",
+                      "inverse-on-surface": "#313030",
+                      "outline-variant": "#5e3e41",
+                      "on-secondary-fixed": "#002022",
+                      "on-tertiary-fixed": "#320047",
+                      "on-primary-container": "#5b0018",
+                      "error-container": "#93000a",
+                      "outline": "#ae8789",
+                      "secondary-fixed": "#7df4ff",
+                      "on-tertiary-container": "#480063",
+                      "surface-variant": "#353534",
+                      "background": "#131313",
+                      "primary-fixed": "#ffdadb",
+                      "surface-container-high": "#2a2a2a",
+                      "surface-dim": "#131313",
+                      "on-secondary": "#00363a",
+                      "on-tertiary-fixed-variant": "#74009f",
+                      "surface-tint": "#ffb2b8",
+                      "inverse-surface": "#e5e2e1",
+                      "surface-container-low": "#1c1b1b",
+                      "tertiary-fixed-dim": "#ecb2ff",
+                      "tertiary": "#ecb2ff",
+                      "secondary": "#d3fbff",
+                      "primary-fixed-dim": "#ffb2b8",
+                      "on-primary-fixed-variant": "#91002d",
+                      "surface": "#131313",
+                      "error": "#ffb4ab",
+                      "surface-bright": "#3a3939",
+                      "on-error-container": "#ffdad6",
+                      "primary-container": "#ff506e",
+                      "surface-container-highest": "#353534",
+                      "secondary-fixed-dim": "#00dbe9",
+                      "on-secondary-fixed-variant": "#004f54",
+                      "on-primary-fixed": "#40000f",
+                      "on-secondary-container": "#00686f",
+                      "secondary-container": "#00eefc",
+                      "tertiary-fixed": "#f8d8ff",
+                      "on-surface-variant": "#e8bcbe",
+                      "inverse-primary": "#be003d",
+                      "primary": "#ffb2b8",
+                      "on-error": "#690005",
+                      "on-background": "#e5e2e1",
+                      "surface-container-lowest": "#0e0e0e",
+                      "on-surface": "#e5e2e1",
+                      "surface-container": "#201f1f",
+                      "on-primary": "#67001d"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "margin-desktop": "64px",
+                      "container-max": "1440px",
+                      "margin-mobile": "20px",
+                      "stack-unit": "8px",
+                      "gutter": "24px"
+              },
+              "fontFamily": {
+                      "body-md": [
+                              "Geist"
+                      ],
+                      "headline-lg-mobile": [
+                              "Anybody"
+                      ],
+                      "code-sm": [
+                              "JetBrains Mono"
+                      ],
+                      "title-md": [
+                              "Geist"
+                      ],
+                      "headline-lg": [
+                              "Anybody"
+                      ],
+                      "display-xl": [
+                              "Anybody"
+                      ],
+                      "body-lg": [
+                              "Geist"
+                      ]
+              },
+              "fontSize": {
+                      "body-md": [
+                              "16px",
+                              {
+                                      "lineHeight": "24px",
+                                      "fontWeight": "400"
+                              }
+                      ],
+                      "headline-lg-mobile": [
+                              "32px",
+                              {
+                                      "lineHeight": "36px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "code-sm": [
+                              "14px",
+                              {
+                                      "lineHeight": "20px",
+                                      "letterSpacing": "0.02em",
+                                      "fontWeight": "500"
+                              }
+                      ],
+                      "title-md": [
+                              "20px",
+                              {
+                                      "lineHeight": "28px",
+                                      "letterSpacing": "0.05em",
+                                      "fontWeight": "600"
+                              }
+                      ],
+                      "headline-lg": [
+                              "48px",
+                              {
+                                      "lineHeight": "56px",
+                                      "letterSpacing": "-0.02em",
+                                      "fontWeight": "800"
+                              }
+                      ],
+                      "display-xl": [
+                              "80px",
+                              {
+                                      "lineHeight": "80px",
+                                      "letterSpacing": "-0.04em",
+                                      "fontWeight": "900"
+                              }
+                      ],
+                      "body-lg": [
+                              "18px",
+                              {
+                                      "lineHeight": "28px",
+                                      "fontWeight": "400"
+                              }
+                      ]
+              }
+      },
+          },
+        }
+    </script>
+</head>
+<body class="bg-[#0A0A0A] text-on-surface antialiased min-h-screen flex flex-col md:flex-row overflow-x-hidden">
+<!-- TopNavBar (Mobile Only) -->
+<nav class="md:hidden glass-panel fixed top-0 w-full z-50 border-b border-white/10 shadow-[0_0_20px_rgba(255,0,85,0.2)] flex justify-between items-center px-margin-mobile py-4 w-full">
+<div class="font-headline-lg-mobile text-headline-lg-mobile font-black text-primary tracking-tighter">NEON NEXUS</div>
+<div class="flex gap-4">
+<button class="text-on-surface-variant hover:text-on-surface transition-colors">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+</div>
+</nav>
+<!-- SideNavBar (Desktop) -->
+<aside class="hidden md:flex bg-surface/90 backdrop-blur-2xl text-primary font-code-sm text-code-sm fixed left-0 h-full w-64 z-40 border-r border-white/10 shadow-2xl flex-col h-full py-stack-unit gap-4 pt-[120px] pb-[60px] justify-between">
+<div class="px-6 flex flex-col gap-8">
+<div>
+<h1 class="font-headline-lg text-headline-lg font-black text-primary leading-tight">NEON NEXUS</h1>
+<p class="text-on-surface-variant opacity-70 mt-2 tracking-widest">ELITE_CORE_V1</p>
+</div>
+<nav class="flex flex-col gap-2">
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary/70 hover:translate-x-1 transition-transform duration-200 hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Overview</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary/70 hover:translate-x-1 transition-transform duration-200 hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="sensors">sensors</span>
+<span>Live Feed</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary/70 hover:translate-x-1 transition-transform duration-200 hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="leaderboard">leaderboard</span>
+<span>Analytics</span>
+</a>
+<!-- Assuming CMS maps conceptually closely to System or is a new injected tab, highlighting System as active for fallback, or creating CMS -->
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg bg-primary/10 text-primary border-r-4 border-primary hover:translate-x-1 transition-transform duration-200 hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="terminal" style="font-variation-settings: 'FILL' 1;">terminal</span>
+<span>CMS</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-3 rounded-lg text-on-surface-variant hover:text-primary/70 hover:translate-x-1 transition-transform duration-200 hover:bg-white/5 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="shield">shield</span>
+<span>Security</span>
+</a>
+</nav>
+</div>
+<div class="px-6 mt-auto flex flex-col gap-4">
+<button class="w-full massive-cta py-3 px-4 text-sm tracking-widest bg-transparent border border-primary text-primary hover:bg-primary hover:text-on-primary shadow-none">LAUNCH_SCAN</button>
+<nav class="flex flex-col gap-2 pt-4 border-t border-white/10">
+<a class="flex items-center gap-4 px-4 py-2 text-on-surface-variant hover:text-primary/70 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span>Support</span>
+</a>
+<a class="flex items-center gap-4 px-4 py-2 text-on-surface-variant hover:text-primary/70 transition-colors" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+<span>Logout</span>
+</a>
+</nav>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-0 md:ml-64 pt-[100px] md:pt-[120px] px-margin-mobile md:px-margin-desktop pb-[120px] min-h-screen flex flex-col relative z-10">
+<!-- Header -->
+<header class="mb-[80px]">
+<h2 class="font-headline-lg-mobile md:font-display-xl text-headline-lg-mobile md:text-display-xl text-on-surface uppercase drop-shadow-[0_0_15px_rgba(255,255,255,0.2)]">CONTENT_MANAGEMENT_SYSTEM</h2>
+<div class="h-1 w-24 bg-primary mt-6 shadow-[0_0_10px_rgba(255,0,85,0.6)]"></div>
+</header>
+<!-- CMS Form Container -->
+<div class="max-w-4xl w-full mx-auto">
+<div class="glass-card rounded-xl p-8 md:p-12 relative overflow-hidden group">
+<!-- Subtle background ambient glow inside card -->
+<div class="absolute -top-20 -right-20 w-64 h-64 bg-primary/10 rounded-full blur-[80px] pointer-events-none group-hover:bg-primary/20 transition-colors duration-700"></div>
+<div class="relative z-10 flex flex-col gap-[40px]">
+<!-- Input Block 1 -->
+<div class="terminal-input-group">
+<label class="terminal-label font-code-sm text-code-sm flex items-center gap-2" for="hero-headline">
+<span class="material-symbols-outlined text-[16px]" data-icon="keyboard_arrow_right">keyboard_arrow_right</span>
+                            HERO_HEADLINE_
+                        </label>
+<textarea class="terminal-input font-code-sm text-[16px] md:text-title-md resize-none overflow-hidden" id="hero-headline" oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'" rows="1">BRAND X CHALLENGES YOU!</textarea>
+</div>
+<!-- Input Block 2 -->
+<div class="terminal-input-group">
+<label class="terminal-label font-code-sm text-code-sm flex items-center gap-2" for="hero-subtitle">
+<span class="material-symbols-outlined text-[16px]" data-icon="keyboard_arrow_right">keyboard_arrow_right</span>
+                            HERO_SUBTITLE_
+                        </label>
+<textarea class="terminal-input font-code-sm text-[16px] md:text-title-md resize-none overflow-hidden" id="hero-subtitle" oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'" rows="2">Activate your elite digital credentials and step into the arena. The void waits for no one.</textarea>
+</div>
+<!-- Input Block 3 -->
+<div class="terminal-input-group">
+<label class="terminal-label font-code-sm text-code-sm flex items-center gap-2" for="footer-text">
+<span class="material-symbols-outlined text-[16px]" data-icon="keyboard_arrow_right">keyboard_arrow_right</span>
+                            FOOTER_TEXT_
+                        </label>
+<textarea class="terminal-input font-code-sm text-[16px] md:text-title-md resize-none overflow-hidden" id="footer-text" oninput="this.style.height = ''; this.style.height = this.scrollHeight + 'px'" rows="1">© 2024 NX x X x LOS // THE VOID REMAINS</textarea>
+</div>
+</div>
+</div>
+<!-- Action Area -->
+<div class="mt-[80px] flex justify-end">
+<button class="massive-cta font-headline-lg-mobile text-[24px] md:text-[32px] rounded-DEFAULT group relative overflow-hidden">
+<div class="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-in-out z-0"></div>
+<span class="relative z-10 flex items-center gap-3">
+                        PUBLISH CHANGES
+                        <span class="material-symbols-outlined font-bold" data-icon="upload">upload</span>
+</span>
+</button>
+</div>
+</div>
+</main>
+<script>
+        // Auto-resize textareas on load just in case
+        document.addEventListener('DOMContentLoaded', () => {
+            const textareas = document.querySelectorAll('.terminal-input');
+            textareas.forEach(ta => {
+                ta.style.height = ta.scrollHeight + 'px';
+            });
+        });
+    </script>
+</body></html>

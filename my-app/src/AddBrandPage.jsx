@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
-import ImageUpload from './ImageUpload';
-
 // Icons (using simple SVGs to avoid dependency issues, or you can import from lucide-react if installed)
 const CheckCircleIcon = () => (
   <svg className="w-6 h-6 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -271,9 +269,12 @@ export default function AddBrandPage() {
             <div>
               <label className="block text-sm font-semibold text-gray-300 mb-2">Brand Logo</label>
               <div className="flex flex-col gap-4">
-                <ImageUpload 
-                  currentImage={formData.logoUrl}
-                  onUploadSuccess={(url) => setFormData(prev => ({ ...prev, logoUrl: url }))}
+                <input 
+                  type="url"
+                  placeholder="https://example.com/logo.png"
+                  value={formData.logoUrl}
+                  onChange={(e) => setFormData(prev => ({ ...prev, logoUrl: e.target.value }))}
+                  className="w-full bg-black/50 border border-white/20 rounded-xl p-4 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
                 />
                 <button
                   type="button"

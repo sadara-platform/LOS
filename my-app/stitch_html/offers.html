@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Neon Nexus - Offers Management</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Anybody:wght@400;600;800;900&amp;family=Geist:wght@400;600&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration (Design System Tokens) -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-primary": "#be003d",
+                    "surface-container-lowest": "#0e0e0e",
+                    "primary-container": "#ff506e",
+                    "on-secondary": "#00363a",
+                    "on-secondary-fixed-variant": "#004f54",
+                    "on-tertiary-fixed": "#320047",
+                    "surface-tint": "#ffb2b8",
+                    "inverse-surface": "#e5e2e1",
+                    "surface-bright": "#3a3939",
+                    "on-tertiary-fixed-variant": "#74009f",
+                    "on-primary-container": "#5b0018",
+                    "on-background": "#e5e2e1",
+                    "tertiary-container": "#cf5cff",
+                    "on-error": "#690005",
+                    "surface-variant": "#353534",
+                    "surface": "#131313",
+                    "on-error-container": "#ffdad6",
+                    "error": "#ffb4ab",
+                    "error-container": "#93000a",
+                    "surface-container-high": "#2a2a2a",
+                    "primary": "#ffb2b8",
+                    "secondary": "#d3fbff",
+                    "primary-fixed-dim": "#ffb2b8",
+                    "on-primary": "#67001d",
+                    "on-tertiary": "#520071",
+                    "inverse-on-surface": "#313030",
+                    "tertiary": "#ecb2ff",
+                    "surface-container": "#201f1f",
+                    "on-primary-fixed-variant": "#91002d",
+                    "tertiary-fixed": "#f8d8ff",
+                    "secondary-fixed": "#7df4ff",
+                    "secondary-container": "#00eefc",
+                    "on-secondary-fixed": "#002022",
+                    "surface-container-low": "#1c1b1b",
+                    "primary-fixed": "#ffdadb",
+                    "on-surface-variant": "#e8bcbe",
+                    "tertiary-fixed-dim": "#ecb2ff",
+                    "on-tertiary-container": "#480063",
+                    "on-secondary-container": "#00686f",
+                    "outline-variant": "#5e3e41",
+                    "surface-container-highest": "#353534",
+                    "background": "#131313",
+                    "secondary-fixed-dim": "#00dbe9",
+                    "outline": "#ae8789",
+                    "on-surface": "#e5e2e1",
+                    "surface-dim": "#131313",
+                    "on-primary-fixed": "#40000f"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "gutter": "24px",
+                    "stack-unit": "8px",
+                    "margin-mobile": "20px",
+                    "margin-desktop": "64px",
+                    "container-max": "1440px"
+            },
+            "fontFamily": {
+                    "title-md": ["Geist"],
+                    "headline-lg-mobile": ["Anybody"],
+                    "body-lg": ["Geist"],
+                    "display-xl": ["Anybody"],
+                    "code-sm": ["JetBrains Mono"],
+                    "headline-lg": ["Anybody"],
+                    "body-md": ["Geist"]
+            },
+            "fontSize": {
+                    "title-md": ["20px", {"lineHeight": "28px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-lg-mobile": ["32px", {"lineHeight": "36px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "display-xl": ["80px", {"lineHeight": "80px", "letterSpacing": "-0.04em", "fontWeight": "900"}],
+                    "code-sm": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                    "headline-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        
+        /* Custom Neon Glow Utilities */
+        .neon-shadow-primary {
+            box-shadow: 0 0 20px rgba(255, 0, 85, 0.4);
+        }
+        .neon-shadow-primary-hover:hover {
+            box-shadow: 0 0 30px rgba(255, 0, 85, 0.6);
+        }
+        
+        /* Subtle scanline overlay for the void aesthetic */
+        .scanline-overlay::before {
+            content: " ";
+            display: block;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            z-index: 100;
+            background-size: 100% 2px, 3px 100%;
+            pointer-events: none;
+            opacity: 0.15;
+        }
+
+        /* Hide scrollbar for a cleaner HUD look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0e0e0e; 
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #353534; 
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff506e; 
+        }
+    </style>
+</head>
+<body class="bg-surface-container-lowest text-on-surface font-body-md text-body-md overflow-x-hidden min-h-screen scanline-overlay selection:bg-inverse-primary selection:text-white">
+<!-- Ambient Void Glows -->
+<div class="fixed top-[-10%] left-[-10%] w-[40vw] h-[40vw] bg-inverse-primary/10 rounded-full blur-[120px] pointer-events-none"></div>
+<div class="fixed bottom-[-20%] right-[-10%] w-[50vw] h-[50vw] bg-tertiary-container/5 rounded-full blur-[150px] pointer-events-none"></div>
+<div class="flex h-screen w-full relative z-10">
+<!-- ========================================== -->
+<!-- SHARED COMPONENT: SideNavBar               -->
+<!-- ========================================== -->
+<nav class="hidden md:flex bg-surface/90 backdrop-blur-2xl text-primary font-code-sm text-code-sm fixed left-0 h-full w-64 z-40 border-r border-white/10 shadow-2xl flex-col py-stack-unit gap-4 overflow-y-auto">
+<!-- Header Identity -->
+<div class="px-6 py-8 flex flex-col items-start gap-4 border-b border-white/5">
+<div class="w-12 h-12 rounded-full overflow-hidden border-2 border-primary/30 p-1">
+<img alt="Organization Logo" class="w-full h-full object-cover rounded-full mix-blend-screen" data-alt="A highly detailed, stylized cyberpunk organization logo. The emblem features sharp, geometric neon nexus lines glowing brightly against a pitch-black background. High contrast, technical aesthetic, conveying elite digital operations." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC7b9_7lU7YfP-7SVXkZUjz-2Z8DA5z6vqkWdELfcfjWiGhjgtMNm926uN-En6oRWcAYjm9lPA361sYn-DiqmdoS_3gng38fClniSPFmBfgbAFeXX0Wqk_-0zpVgTyrgTa09s4GjUpTLhArIqK6i8JPOTKkSl5ppC_XrT51TaBrFq4Gv9Bxyyc1yCmX4Enac_u1mrZgRPyUv0ddOxWEx9QwDuPym_uITr8p6mqh9QAWvdRh0GZ2vs3IaikJlZMpcV5tryeyHpcHPDA"/>
+</div>
+<div>
+<h2 class="font-headline-lg text-headline-lg font-black text-primary uppercase tracking-tighter text-[28px] leading-[32px]">NEON NEXUS</h2>
+<p class="text-on-surface-variant text-[10px] tracking-widest mt-1">ELITE_CORE_V1</p>
+</div>
+<button class="mt-4 w-full bg-primary/10 border border-primary/30 text-primary py-2 px-4 rounded hover:bg-primary/20 transition-colors uppercase tracking-wider text-xs flex justify-between items-center group">
+<span>LAUNCH_SCAN</span>
+<span class="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">radar</span>
+</button>
+</div>
+<!-- Navigation Links -->
+<div class="flex-1 flex flex-col gap-2 px-4 py-6">
+<!-- Active Item (Overview selected semantically for Dashboard) -->
+<a class="bg-primary/10 text-primary border-r-4 border-primary hover:bg-white/5 transition-colors flex items-center gap-4 px-4 py-3 rounded-l-lg hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Overview</span>
+</a>
+<!-- Inactive Items -->
+<a class="text-on-surface-variant hover:text-primary/70 hover:bg-white/5 transition-colors flex items-center gap-4 px-4 py-3 rounded-l-lg hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">sensors</span>
+<span>Live Feed</span>
+</a>
+<a class="text-on-surface-variant hover:text-primary/70 hover:bg-white/5 transition-colors flex items-center gap-4 px-4 py-3 rounded-l-lg hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">leaderboard</span>
+<span>Analytics</span>
+</a>
+<a class="text-on-surface-variant hover:text-primary/70 hover:bg-white/5 transition-colors flex items-center gap-4 px-4 py-3 rounded-l-lg hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">shield</span>
+<span>Security</span>
+</a>
+<a class="text-on-surface-variant hover:text-primary/70 hover:bg-white/5 transition-colors flex items-center gap-4 px-4 py-3 rounded-l-lg hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">terminal</span>
+<span>System</span>
+</a>
+</div>
+<!-- Footer Links -->
+<div class="px-4 py-6 border-t border-white/5 flex flex-col gap-2 mt-auto">
+<a class="text-on-surface-variant hover:text-primary/70 hover:bg-white/5 transition-colors flex items-center gap-4 px-4 py-2 rounded-lg hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">help</span>
+<span>Support</span>
+</a>
+<a class="text-on-surface-variant hover:text-primary/70 hover:bg-white/5 transition-colors flex items-center gap-4 px-4 py-2 rounded-lg hover:translate-x-1 transition-transform duration-200" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span>Logout</span>
+</a>
+</div>
+</nav>
+<!-- ========================================== -->
+<!-- MAIN CANVAS                                -->
+<!-- ========================================== -->
+<main class="flex-1 ml-0 md:ml-64 flex flex-col relative h-full overflow-y-auto">
+<div class="max-w-[1200px] w-full mx-auto px-margin-mobile md:px-margin-desktop py-12 md:py-24 flex flex-col gap-16">
+<!-- 1. Header Section -->
+<header class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 border-b border-white/10 pb-8 relative">
+<div class="relative z-10">
+<p class="font-code-sm text-code-sm text-primary mb-2 opacity-70">&gt; SYS_COM // DASHBOARD // OFFERS</p>
+<h1 class="font-headline-lg-mobile md:font-headline-lg text-headline-lg-mobile md:text-headline-lg font-black text-on-surface uppercase tracking-tighter drop-shadow-lg">
+                            ACTIVE_OFFERS_<br/>MANAGEMENT
+                        </h1>
+</div>
+<button class="group relative inline-flex items-center justify-center bg-inverse-primary text-white font-code-sm text-code-sm uppercase px-8 py-5 tracking-widest overflow-hidden transition-all duration-300 hover:scale-105 neon-shadow-primary neon-shadow-primary-hover border border-white/20">
+<span class="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out"></span>
+<span class="relative z-10 flex items-center gap-2">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                            CREATE_NEW_OFFER
+                        </span>
+</button>
+</header>
+<!-- 2. Create Offer Form (Terminal Style) -->
+<section class="relative group">
+<!-- Glass Frame -->
+<div class="absolute inset-0 bg-surface-container-low/80 backdrop-blur-xl border border-inverse-primary/20 rounded-lg pointer-events-none transition-colors duration-500 group-hover:border-inverse-primary/40"></div>
+<div class="relative z-10 p-8 md:p-12 flex flex-col gap-10">
+<div class="flex items-center gap-3 border-b border-white/10 pb-4">
+<span class="material-symbols-outlined text-primary">terminal</span>
+<h3 class="font-code-sm text-code-sm text-primary tracking-widest uppercase">Input Sequence Required</h3>
+</div>
+<form class="flex flex-col gap-8 w-full max-w-2xl font-code-sm text-code-sm">
+<!-- Field: Title -->
+<div class="flex flex-col gap-2">
+<label class="text-on-surface-variant flex items-center gap-2" for="offer_title">
+<span class="text-primary">&gt;</span> OFFER_TITLE_
+                                </label>
+<input class="bg-transparent border-0 border-b-2 border-surface-variant text-on-surface focus:ring-0 focus:border-inverse-primary py-3 px-0 w-full placeholder:text-surface-variant placeholder:opacity-50 transition-colors" id="offer_title" placeholder="ENTER ALPHANUMERIC DESIGNATION..." type="text"/>
+</div>
+<!-- Field: Product Select -->
+<div class="flex flex-col gap-2">
+<label class="text-on-surface-variant flex items-center gap-2" for="linked_product">
+<span class="text-primary">&gt;</span> LINKED_PRODUCT_
+                                </label>
+<select class="bg-surface-container border-0 border-b-2 border-surface-variant text-on-surface focus:ring-0 focus:border-inverse-primary py-3 px-0 w-full appearance-none transition-colors cursor-pointer" id="linked_product">
+<option class="text-surface-variant" disabled="" selected="" value="">SELECT TARGET ASSET...</option>
+<option value="p1">Neon Nexus Pass (Season 1)</option>
+<option value="p2">Elite Core Activation Key</option>
+<option value="p3">Void cosmetic bundle</option>
+</select>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+<!-- Field: Discount -->
+<div class="flex flex-col gap-2">
+<label class="text-on-surface-variant flex items-center gap-2" for="discount_value">
+<span class="text-primary">&gt;</span> DISCOUNT_VALUE_
+                                    </label>
+<div class="relative">
+<span class="absolute left-0 top-1/2 -translate-y-1/2 text-on-surface-variant">%</span>
+<input class="bg-transparent border-0 border-b-2 border-surface-variant text-on-surface focus:ring-0 focus:border-inverse-primary py-3 pl-6 pr-0 w-full placeholder:text-surface-variant placeholder:opacity-50 transition-colors" id="discount_value" placeholder="00.00" type="number"/>
+</div>
+</div>
+<!-- Field: Date -->
+<div class="flex flex-col gap-2">
+<label class="text-on-surface-variant flex items-center gap-2" for="valid_until">
+<span class="text-primary">&gt;</span> VALID_UNTIL_
+                                    </label>
+<input class="bg-transparent border-0 border-b-2 border-surface-variant text-on-surface focus:ring-0 focus:border-inverse-primary py-3 px-0 w-full transition-colors opacity-80 focus:opacity-100 color-scheme-dark" id="valid_until" type="date"/>
+</div>
+</div>
+<!-- Form CTA -->
+<div class="mt-4 flex justify-end">
+<button class="group flex items-center gap-3 bg-white/5 border border-white/10 px-6 py-4 hover:bg-white/10 hover:border-inverse-primary/50 transition-all duration-300 hover:-translate-y-1" type="button">
+<span class="font-code-sm text-code-sm uppercase tracking-widest text-on-surface group-hover:text-primary transition-colors">INITIALIZE_OFFER_PROTOCOL</span>
+<span class="material-symbols-outlined text-primary group-hover:translate-x-2 transition-transform">arrow_forward</span>
+</button>
+</div>
+</form>
+</div>
+</section>
+<!-- 3. Offers Data Table -->
+<section class="flex flex-col gap-6">
+<div class="flex items-center justify-between border-b border-white/10 pb-4">
+<h3 class="font-code-sm text-code-sm text-primary tracking-widest uppercase flex items-center gap-2">
+<span class="material-symbols-outlined">dataset</span>
+                            DATABASE_QUERY_RESULTS
+                        </h3>
+<span class="text-on-surface-variant text-xs opacity-60">Showing active entries</span>
+</div>
+<!-- Custom Table Structure (Div based for floating rows) -->
+<div class="w-full flex flex-col gap-4 font-code-sm text-[13px]">
+<!-- Header Row -->
+<div class="grid grid-cols-6 gap-4 px-6 py-3 text-on-surface-variant uppercase tracking-widest border-b border-white/5 mb-2">
+<div class="col-span-1">OFFER_ID</div>
+<div class="col-span-2">PRODUCT</div>
+<div class="col-span-1">DISCOUNT</div>
+<div class="col-span-1">VALID_UNTIL</div>
+<div class="col-span-1 text-right">STATUS/ACT</div>
+</div>
+<!-- Data Row 1 (LIVE) -->
+<div class="grid grid-cols-6 gap-4 items-center px-6 py-5 bg-white/5 backdrop-blur-md border border-white/10 rounded transition-all duration-300 hover:-translate-y-2 hover:backdrop-blur-xl hover:bg-white/10 hover:border-inverse-primary/30 group">
+<div class="col-span-1 text-primary">#NX-001A</div>
+<div class="col-span-2 text-on-surface truncate pr-4">Neon Nexus Pass (Season 1)</div>
+<div class="col-span-1 text-on-surface font-bold">25.00%</div>
+<div class="col-span-1 text-on-surface-variant">2024-12-31</div>
+<div class="col-span-1 flex justify-end items-center gap-4">
+<span class="border border-secondary-container text-secondary-container px-2 py-1 text-[10px] tracking-widest uppercase shadow-[0_0_10px_rgba(0,238,252,0.2)] bg-secondary-container/10">LIVE</span>
+<div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-on-surface-variant hover:text-white transition-colors"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="text-on-surface-variant hover:text-inverse-primary transition-colors"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</div>
+</div>
+<!-- Data Row 2 (EXPIRED) -->
+<div class="grid grid-cols-6 gap-4 items-center px-6 py-5 bg-black/40 backdrop-blur-sm border border-white/5 rounded transition-all duration-300 hover:-translate-y-1 hover:border-white/10 group opacity-70">
+<div class="col-span-1 text-surface-variant">#NX-000B</div>
+<div class="col-span-2 text-surface-variant truncate pr-4">Early Access Core Module</div>
+<div class="col-span-1 text-surface-variant">50.00%</div>
+<div class="col-span-1 text-surface-variant">2024-01-15</div>
+<div class="col-span-1 flex justify-end items-center gap-4">
+<span class="border border-surface-variant text-surface-variant px-2 py-1 text-[10px] tracking-widest uppercase bg-black">EXPIRED</span>
+<div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-surface-variant hover:text-white transition-colors"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="text-surface-variant hover:text-inverse-primary transition-colors"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</div>
+</div>
+<!-- Data Row 3 (LIVE) -->
+<div class="grid grid-cols-6 gap-4 items-center px-6 py-5 bg-white/5 backdrop-blur-md border border-white/10 rounded transition-all duration-300 hover:-translate-y-2 hover:backdrop-blur-xl hover:bg-white/10 hover:border-inverse-primary/30 group">
+<div class="col-span-1 text-primary">#VX-992C</div>
+<div class="col-span-2 text-on-surface truncate pr-4">Void Cosmetic Bundle</div>
+<div class="col-span-1 text-on-surface font-bold">10.00%</div>
+<div class="col-span-1 text-on-surface-variant">2024-08-01</div>
+<div class="col-span-1 flex justify-end items-center gap-4">
+<span class="border border-secondary-container text-secondary-container px-2 py-1 text-[10px] tracking-widest uppercase shadow-[0_0_10px_rgba(0,238,252,0.2)] bg-secondary-container/10">LIVE</span>
+<div class="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="text-on-surface-variant hover:text-white transition-colors"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="text-on-surface-variant hover:text-inverse-primary transition-colors"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+</div>
+</body></html>

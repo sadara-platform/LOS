@@ -32,7 +32,7 @@ class GlobalErrorBoundary extends React.Component {
 const TournamentLandingPage = lazy(() => import('./TournamentLandingPage'));
 const BrandActivationPage = lazy(() => import('./BrandActivationPage'));
 const AddBrandPage = lazy(() => import('./AddBrandPage'));
-const BrandOwnerDashboard = lazy(() => import('./BrandOwnerDashboard'));
+const BrandOwnerDashboard = lazy(() => import('./features/brand-owner/BrandOwnerDashboard'));
 const TournamentController = lazy(() => import('./TournamentController'));
 const AdminLayout = lazy(() => import('./AdminLayout'));
 const BrandList = lazy(() => import('./BrandList'));

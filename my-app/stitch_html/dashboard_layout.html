@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Neon Nexus Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Anybody:wght@800;900&amp;family=Geist:wght@400;600&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-secondary-fixed-variant": "#004f54",
+                        "primary-container": "#ff506e",
+                        "surface-variant": "#353534",
+                        "outline-variant": "#5e3e41",
+                        "surface-container-high": "#2a2a2a",
+                        "surface-container-low": "#1c1b1b",
+                        "primary-fixed": "#ffdadb",
+                        "outline": "#ae8789",
+                        "surface-container-lowest": "#0e0e0e",
+                        "on-tertiary-container": "#480063",
+                        "error": "#ffb4ab",
+                        "on-surface-variant": "#e8bcbe",
+                        "inverse-primary": "#be003d",
+                        "on-error": "#690005",
+                        "on-primary-fixed": "#40000f",
+                        "on-primary": "#67001d",
+                        "on-surface": "#e5e2e1",
+                        "surface-tint": "#ffb2b8",
+                        "surface-container-highest": "#353534",
+                        "tertiary-container": "#cf5cff",
+                        "surface-container": "#201f1f",
+                        "secondary-fixed-dim": "#00dbe9",
+                        "on-secondary-fixed": "#002022",
+                        "on-secondary": "#00363a",
+                        "on-secondary-container": "#00686f",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed-variant": "#74009f",
+                        "secondary-fixed": "#7df4ff",
+                        "on-background": "#e5e2e1",
+                        "surface": "#131313",
+                        "inverse-surface": "#e5e2e1",
+                        "tertiary": "#ecb2ff",
+                        "surface-dim": "#131313",
+                        "primary-fixed-dim": "#ffb2b8",
+                        "on-primary-container": "#5b0018",
+                        "tertiary-fixed": "#f8d8ff",
+                        "on-tertiary-fixed": "#320047",
+                        "on-error-container": "#ffdad6",
+                        "surface-bright": "#3a3939",
+                        "on-tertiary": "#520071",
+                        "secondary-container": "#00eefc",
+                        "secondary": "#d3fbff",
+                        "primary": "#ffb2b8",
+                        "tertiary-fixed-dim": "#ecb2ff",
+                        "on-primary-fixed-variant": "#91002d",
+                        "background": "#131313",
+                        "inverse-on-surface": "#313030"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    spacing: {
+                        "stack-unit": "8px",
+                        "margin-mobile": "20px",
+                        "gutter": "24px",
+                        "margin-desktop": "64px",
+                        "container-max": "1440px"
+                    },
+                    fontFamily: {
+                        "title-md": ["Geist"],
+                        "display-xl": ["Anybody"],
+                        "body-md": ["Geist"],
+                        "headline-lg": ["Anybody"],
+                        "code-sm": ["JetBrains Mono"],
+                        "body-lg": ["Geist"],
+                        "headline-lg-mobile": ["Anybody"]
+                    },
+                    fontSize: {
+                        "title-md": ["20px", { lineHeight: "28px", letterSpacing: "0.05em", fontWeight: "600" }],
+                        "display-xl": ["80px", { lineHeight: "80px", letterSpacing: "-0.04em", fontWeight: "900" }],
+                        "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+                        "headline-lg": ["48px", { lineHeight: "56px", letterSpacing: "-0.02em", fontWeight: "800" }],
+                        "code-sm": ["14px", { lineHeight: "20px", letterSpacing: "0.02em", fontWeight: "500" }],
+                        "body-lg": ["18px", { lineHeight: "28px", fontWeight: "400" }],
+                        "headline-lg-mobile": ["32px", { lineHeight: "36px", letterSpacing: "-0.02em", fontWeight: "800" }]
+                    },
+                    colors: {
+                        "brand-bg": "#0A0A0A",
+                        "brand-surface": "#171717",
+                        "brand-border": "#404040",
+                        "brand-primary": "#FAFAFA",
+                        "brand-secondary": "#A3A3A3",
+                        "brand-accent": "#FF0055",
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #0A0A0A; color: #FAFAFA; }
+        .glass-panel {
+            background-color: rgba(23, 23, 23, 0.4);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .neon-shadow {
+            box-shadow: 0 0 20px rgba(255, 0, 85, 0.4);
+        }
+        .hover-lift { transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .hover-lift:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 30px rgba(255, 0, 85, 0.6);
+            border-color: rgba(255, 0, 85, 0.4);
+        }
+        .text-glow { text-shadow: 0 0 10px rgba(255, 0, 85, 0.5); }
+    </style>
+</head>
+<body class="font-body-md h-screen flex overflow-hidden selection:bg-brand-accent selection:text-white">
+<!-- Sidebar / Drawer -->
+<aside class="fixed inset-y-0 left-0 z-50 w-64 glass-panel border-r border-brand-border flex flex-col transition-transform duration-300 transform -translate-x-full md:relative md:translate-x-0 md:w-64">
+<div class="h-16 flex items-center px-6 border-b border-white/5">
+<span class="font-headline-lg-mobile text-headline-lg-mobile text-brand-primary uppercase tracking-tighter">NEXUS</span>
+</div>
+<nav class="flex-1 overflow-y-auto py-4 px-3 space-y-2">
+<a class="flex items-center px-3 py-2.5 rounded-lg bg-brand-accent/10 text-brand-accent font-code-sm border border-brand-accent/30 neon-shadow group" href="#">
+<span class="material-symbols-outlined mr-3" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+                Dashboard
+            </a>
+<a class="flex items-center px-3 py-2.5 rounded-lg text-brand-secondary hover:bg-white/5 hover:text-brand-primary font-code-sm transition-colors group" href="#">
+<span class="material-symbols-outlined mr-3 group-hover:text-brand-primary transition-colors">analytics</span>
+                Analytics
+            </a>
+<a class="flex items-center px-3 py-2.5 rounded-lg text-brand-secondary hover:bg-white/5 hover:text-brand-primary font-code-sm transition-colors group" href="#">
+<span class="material-symbols-outlined mr-3 group-hover:text-brand-primary transition-colors">inventory_2</span>
+                Products
+            </a>
+<a class="flex items-center px-3 py-2.5 rounded-lg text-brand-secondary hover:bg-white/5 hover:text-brand-primary font-code-sm transition-colors group" href="#">
+<span class="material-symbols-outlined mr-3 group-hover:text-brand-primary transition-colors">local_offer</span>
+                Offers
+            </a>
+<a class="flex items-center px-3 py-2.5 rounded-lg text-brand-secondary hover:bg-white/5 hover:text-brand-primary font-code-sm transition-colors group" href="#">
+<span class="material-symbols-outlined mr-3 group-hover:text-brand-primary transition-colors">code</span>
+                Codes
+            </a>
+<a class="flex items-center px-3 py-2.5 rounded-lg text-brand-secondary hover:bg-white/5 hover:text-brand-primary font-code-sm transition-colors group" href="#">
+<span class="material-symbols-outlined mr-3 group-hover:text-brand-primary transition-colors">settings</span>
+                Settings
+            </a>
+<a class="flex items-center px-3 py-2.5 rounded-lg text-brand-secondary hover:bg-white/5 hover:text-brand-primary font-code-sm transition-colors group" href="#">
+<span class="material-symbols-outlined mr-3 group-hover:text-brand-primary transition-colors">integration_instructions</span>
+                Cms
+            </a>
+</nav>
+<div class="p-4 border-t border-white/5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-brand-surface border border-brand-border overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A futuristic avatar portrait of a cyberpunk character bathed in intense neon red and cyan light, dramatic shadows, highly detailed cybernetic enhancements visible on the face." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBP0WJgv9zB0ZFAEFCpPUpGyOVQ3f9ItICK6y4960ziH8gHlrhA-j_dBjvIsloeqHITLQMnkD_KwblJk1ox68_Mi8lflZ7UTzd2PXZMsreJ2_3XUNfl5wp2b0Txhd50AAUvcKmyYy7XUIx2Hf9ZZIQJviJ2gUziKyhXfoCO1sJC-HiMwNKy9W2TnmLaYtTJ8AmNvsr6C_NXFXliNJH5HfSWEh4e5MzQyYEjDhj7zrkrCWzlrHwMMbzFq4DJVk5wryzilEtLUR9EmLA"/>
+</div>
+<div>
+<div class="font-code-sm text-brand-primary">SYS_ADMIN</div>
+<div class="text-xs text-brand-secondary">Lvl 99 Access</div>
+</div>
+</div>
+</div>
+</aside>
+<!-- Main Content -->
+<div class="flex-1 flex flex-col min-w-0 overflow-hidden">
+<!-- Header -->
+<header class="h-16 glass-panel border-b border-brand-border flex items-center justify-between px-6 z-40">
+<div class="flex items-center flex-1">
+<button class="md:hidden text-brand-primary mr-4">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="relative w-full max-w-md hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-brand-secondary">search</span>
+<input class="w-full bg-transparent border-0 border-b-2 border-brand-border focus:border-brand-accent focus:ring-0 text-brand-primary font-code-sm pl-10 py-2 placeholder-brand-secondary transition-colors" placeholder="&gt; SEARCH_QUERY_" type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-brand-secondary hover:text-brand-primary transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-brand-accent rounded-full neon-shadow"></span>
+</button>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="flex-1 overflow-y-auto p-gutter sm:p-margin-desktop">
+<div class="max-w-container-max mx-auto space-y-12">
+<!-- Page Header -->
+<div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+<div>
+<h1 class="font-headline-lg text-headline-lg-mobile md:text-headline-lg text-brand-primary uppercase tracking-tighter text-glow">System Overview</h1>
+<p class="font-code-sm text-brand-secondary mt-2">&gt; STATUS: OPTIMAL // ALL SYSTEMS NOMINAL</p>
+</div>
+<button class="bg-brand-accent text-white font-title-md py-3 px-8 rounded-DEFAULT neon-shadow hover-lift uppercase tracking-widest flex items-center justify-center gap-2 w-full sm:w-auto">
+<span class="material-symbols-outlined">add</span>
+                        New Protocol
+                    </button>
+</div>
+<!-- KPI Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- KPI Card 1 -->
+<div class="glass-panel p-6 rounded-xl hover-lift relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity">
+<span class="material-symbols-outlined text-6xl text-brand-accent">speed</span>
+</div>
+<div class="font-code-sm text-brand-secondary mb-2">&gt; TOTAL_REQUESTS</div>
+<div class="font-display-xl text-4xl text-brand-primary tabular-nums tracking-tighter">84,209</div>
+<div class="mt-4 flex items-center text-sm">
+<span class="text-green-400 flex items-center mr-2"><span class="material-symbols-outlined text-sm mr-1">trending_up</span>+12.5%</span>
+<span class="text-brand-secondary">vs last cycle</span>
+</div>
+</div>
+<!-- KPI Card 2 -->
+<div class="glass-panel p-6 rounded-xl hover-lift relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity">
+<span class="material-symbols-outlined text-6xl text-brand-accent">memory</span>
+</div>
+<div class="font-code-sm text-brand-secondary mb-2">&gt; CPU_LOAD</div>
+<div class="font-display-xl text-4xl text-brand-primary tabular-nums tracking-tighter text-glow">92%</div>
+<div class="mt-4 flex items-center text-sm">
+<span class="text-brand-accent flex items-center mr-2"><span class="material-symbols-outlined text-sm mr-1">warning</span>CRITICAL</span>
+<span class="text-brand-secondary">allocation</span>
+</div>
+</div>
+<!-- KPI Card 3 -->
+<div class="glass-panel p-6 rounded-xl hover-lift relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity">
+<span class="material-symbols-outlined text-6xl text-brand-accent">account_tree</span>
+</div>
+<div class="font-code-sm text-brand-secondary mb-2">&gt; ACTIVE_NODES</div>
+<div class="font-display-xl text-4xl text-brand-primary tabular-nums tracking-tighter">1,024</div>
+<div class="mt-4 flex items-center text-sm">
+<span class="text-green-400 flex items-center mr-2"><span class="material-symbols-outlined text-sm mr-1">check_circle</span>STABLE</span>
+<span class="text-brand-secondary">cluster status</span>
+</div>
+</div>
+<!-- KPI Card 4 -->
+<div class="glass-panel p-6 rounded-xl hover-lift relative overflow-hidden group">
+<div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-30 transition-opacity">
+<span class="material-symbols-outlined text-6xl text-brand-accent">api</span>
+</div>
+<div class="font-code-sm text-brand-secondary mb-2">&gt; API_LATENCY</div>
+<div class="font-display-xl text-4xl text-brand-primary tabular-nums tracking-tighter">12ms</div>
+<div class="mt-4 flex items-center text-sm">
+<span class="text-brand-secondary flex items-center mr-2"><span class="material-symbols-outlined text-sm mr-1">remove</span>-2ms</span>
+<span class="text-brand-secondary">improvement</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>
