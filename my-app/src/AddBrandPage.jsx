@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
+import ImageUpload from './components/ImageUpload';
 // Icons (using simple SVGs to avoid dependency issues, or you can import from lucide-react if installed)
 const CheckCircleIcon = () => (
   <svg className="w-6 h-6 text-green-400 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -150,20 +151,15 @@ export default function AddBrandPage() {
         owner_id: newOwnerId // Assign the newly created user as the owner
       };
 
-      const response = await fetch(`${supabaseUrl}/rest/v1/brands`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'apikey': supabaseKey,
-          'Authorization': `Bearer ${supabaseKey}`,
-          'Prefer': 'return=representation'
-        },
-        body: JSON.stringify(payload)
-      });
+      const { supabase } = await import('./supabaseClient');
+      const { data, error } = await supabase
+        .from('brands')
+        .insert([payload])
+        .select()
+        .single();
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Failed to register brand. Slug might be taken.');
+      if (error) {
+        throw new Error(error.message || 'Failed to register brand. Slug might be taken.');
       }
 
       setToastMessage(`Success: Brand "${formData.name}" added successfully!`);
@@ -269,12 +265,9 @@ export default function AddBrandPage() {
             <div>
               <label className="block text-sm font-semibold text-gray-300 mb-2">Brand Logo</label>
               <div className="flex flex-col gap-4">
-                <input 
-                  type="url"
-                  placeholder="https://example.com/logo.png"
-                  value={formData.logoUrl}
-                  onChange={(e) => setFormData(prev => ({ ...prev, logoUrl: e.target.value }))}
-                  className="w-full bg-black/50 border border-white/20 rounded-xl p-4 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                <ImageUpload 
+                  onUploadSuccess={(url) => setFormData(prev => ({ ...prev, logoUrl: url }))} 
+                  currentImage={formData.logoUrl} 
                 />
                 <button
                   type="button"
