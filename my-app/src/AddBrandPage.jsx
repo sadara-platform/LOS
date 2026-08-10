@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { createClient } from '@supabase/supabase-js';
+import ImageUpload from './ImageUpload';
 
 // Icons (using simple SVGs to avoid dependency issues, or you can import from lucide-react if installed)
 const CheckCircleIcon = () => (
@@ -266,25 +267,21 @@ export default function AddBrandPage() {
               />
             </div>
 
-            {/* Brand Logo URL */}
+            {/* Brand Logo */}
             <div>
-              <label className="block text-sm font-semibold text-gray-300 mb-2">Brand Logo URL (or Base64)</label>
-              <div className="flex items-center gap-2">
-                <input 
-                  type="text" 
-                  name="logoUrl"
-                  value={formData.logoUrl}
-                  onChange={handleChange}
-                  placeholder="https://example.com/logo.png"
-                  className="flex-1 bg-black/50 border border-white/20 rounded-xl p-4 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+              <label className="block text-sm font-semibold text-gray-300 mb-2">Brand Logo</label>
+              <div className="flex flex-col gap-4">
+                <ImageUpload 
+                  currentImage={formData.logoUrl}
+                  onUploadSuccess={(url) => setFormData(prev => ({ ...prev, logoUrl: url }))}
                 />
                 <button
                   type="button"
                   onClick={handleAnalyzeLogo}
                   disabled={isAnalyzing || !formData.logoUrl}
-                  className="bg-indigo-600 hover:bg-indigo-500 text-white p-4 rounded-xl font-bold transition-all disabled:opacity-50 flex items-center justify-center min-w-[160px]"
+                  className="bg-indigo-600 hover:bg-indigo-500 text-white p-4 rounded-xl font-bold transition-all disabled:opacity-50 flex items-center justify-center w-full"
                 >
-                  {isAnalyzing ? <LoaderIcon /> : '✨ AI Analyze'}
+                  {isAnalyzing ? <LoaderIcon /> : '✨ AI Analyze Logo Colors'}
                 </button>
               </div>
             </div>
