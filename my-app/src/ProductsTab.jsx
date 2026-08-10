@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from './SupabaseClient';
 import { ShoppingBag, Plus, Trash2, Edit2, AlertCircle } from 'lucide-react';
+import ImageUpload from './ImageUpload';
 
 export default function ProductsTab({ brand }) {
   const [products, setProducts] = useState([]);
@@ -124,8 +125,11 @@ export default function ProductsTab({ brand }) {
               <input type="text" required value={newProduct.category} onChange={e => setNewProduct({...newProduct, category: e.target.value})} className="w-full bg-[#0A0A0A] border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-brand-red transition-colors" placeholder="e.g. VEST" />
             </div>
             <div className="md:col-span-2">
-              <label className="block text-[10px] font-bold tracking-widest text-zinc-400 uppercase mb-2">Image URL</label>
-              <input type="url" required value={newProduct.image_url} onChange={e => setNewProduct({...newProduct, image_url: e.target.value})} className="w-full bg-[#0A0A0A] border border-white/10 rounded-lg px-4 py-3 text-white text-sm focus:outline-none focus:border-brand-red transition-colors" placeholder="https://..." />
+              <label className="block text-[10px] font-bold tracking-widest text-zinc-400 uppercase mb-2">Product Image</label>
+              <ImageUpload 
+                currentImage={newProduct.image_url}
+                onUploadSuccess={(url) => setNewProduct({...newProduct, image_url: url})} 
+              />
             </div>
             <div className="md:col-span-2">
               <label className="block text-[10px] font-bold tracking-widest text-zinc-400 uppercase mb-2">Description</label>
