@@ -85,7 +85,8 @@ export default function BrandActivationPage() {
           textPrimary: dbBrand.text_primary || '#FFFFFF',
           textSecondary: dbBrand.text_secondary || '#71717A',
           themeMode: dbBrand.theme_mode || 'dark',
-          logoUrl: dbBrand.logo_url
+          logoUrl: dbBrand.logo_url,
+          cmsConfig: dbBrand.cms_config || {}
         });
         
         // Fetch products for this brand
@@ -280,6 +281,8 @@ export default function BrandActivationPage() {
     '--brand-text-muted': isSwapped ? brandData?.surfaceColor : brandData?.textSecondary,
   } as React.CSSProperties;
 
+  const cmsConfig = brandData?.cmsConfig || {};
+
   return (
     <div 
       className={`min-h-screen font-sans selection:bg-brand-red selection:text-white bg-brand-bg text-brand-text`}
@@ -291,7 +294,7 @@ export default function BrandActivationPage() {
         <div className="text-brand-muted font-light">Living True Details Happy // {brandData?.name || 'LOS'}</div>
         <div className="font-semibold text-brand-light flex items-center gap-1.5">
           <span className="w-1.5 h-1.5 bg-brand-secondary rounded-full animate-ping"></span>
-          FOR DEDICATED REBELS // SECURE GLOBAL EXPRESS SHIPPING
+          {cmsConfig.topBarMsg || 'FOR DEDICATED REBELS // SECURE GLOBAL EXPRESS SHIPPING'}
         </div>
         <div className="flex items-center gap-4 text-brand-muted">
           <span className="text-white/10">|</span>
@@ -398,24 +401,24 @@ export default function BrandActivationPage() {
 
           {/* BACKGROUND TEXT BEHIND MODEL */}
           <div className="absolute inset-0 flex flex-col justify-center items-center pointer-events-none select-none opacity-[0.04] md:opacity-[0.07] z-0">
-            <h1 className="text-[12vw] font-display font-bold leading-none tracking-tighter text-brand-secondary">STRETEAT</h1>
-            <h2 className="text-[10vw] font-display font-light leading-none tracking-widest text-brand-accent">SELVING</h2>
+            <h1 className="text-[12vw] font-display font-bold leading-none tracking-tighter text-brand-secondary">{cmsConfig.heroBg1 || 'STRETEAT'}</h1>
+            <h2 className="text-[10vw] font-display font-light leading-none tracking-widest text-brand-accent">{cmsConfig.heroBg2 || 'SELVING'}</h2>
           </div>
 
           {/* Left Editorial Info Block */}
           <div className="w-full lg:w-5/12 z-10 space-y-6 text-left relative">
             <div className="inline-flex items-center gap-2 bg-brand-secondary/10 border border-brand-secondary/25 px-4 py-1 rounded-full">
               <span className="w-1.5 h-1.5 bg-brand-secondary rounded-full animate-pulse"></span>
-              <span className="text-[10px] tracking-widest font-bold uppercase text-brand-secondary font-display">NEW EXPANSION 03.1</span>
+              <span className="text-[10px] tracking-widest font-bold uppercase text-brand-secondary font-display">{cmsConfig.heroLabel || 'NEW EXPANSION 03.1'}</span>
             </div>
             
             <h3 className="text-5xl md:text-7xl lg:text-8xl font-display font-bold leading-tight tracking-tight uppercase">
-              STRETEAT <br/>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-light to-brand-muted">SELVING</span>
+              {cmsConfig.heroTitle1 || 'STRETEAT'} <br/>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-light to-brand-muted">{cmsConfig.heroTitle2 || 'SELVING'}</span>
             </h3>
 
             <p className="text-sm md:text-base text-brand-muted font-light leading-relaxed max-w-md">
-              The boundaries of modern streetwear are pure attitude, industrial geometry, and high-performance utility. Discover our new capsule release crafted with heavy fabrics and modular detailing.
+              {cmsConfig.heroSubtitle || 'The boundaries of modern streetwear are pure attitude, industrial geometry, and high-performance utility. Discover our new capsule release crafted with heavy fabrics and modular detailing.'}
             </p>
 
             <div className="pt-4 flex flex-wrap items-center gap-4">
@@ -509,16 +512,16 @@ export default function BrandActivationPage() {
           {/* GIANT TITLE ON THE BACKGROUND */}
           <div className="absolute inset-0 flex items-center justify-center pointer-events-none select-none z-0">
             <h2 className="text-[14vw] font-display font-black leading-none tracking-tighter text-white opacity-[0.03] select-none uppercase">
-              SOEFGN
+              {cmsConfig.midBg || 'SOEFGN'}
             </h2>
           </div>
 
           <div className="mb-16 space-y-4">
             <h3 className="text-3xl md:text-5xl font-display font-bold tracking-widest uppercase">
-              SOEFGN CAPSULE
+              {cmsConfig.midTitle || 'SOEFGN CAPSULE'}
             </h3>
             <p className="text-brand-muted text-xs md:text-sm max-w-md mx-auto font-light">
-              High-contrast silhouettes designed to command presence. Engineered with layered weather shields and modular fasteners.
+              {cmsConfig.midSubtitle || 'High-contrast silhouettes designed to command presence. Engineered with layered weather shields and modular fasteners.'}
             </p>
           </div>
 
@@ -605,9 +608,9 @@ export default function BrandActivationPage() {
           
           <div className="flex flex-col md:flex-row md:justify-between md:items-end mb-12 gap-6">
             <div className="space-y-3">
-              <span className="text-[10px] tracking-widest uppercase font-bold text-brand-red">CATEGORIZED SYSTEM</span>
+              <span className="text-[10px] tracking-widest uppercase font-bold text-brand-red">{cmsConfig.colLabel || 'CATEGORIZED SYSTEM'}</span>
               <h3 className="text-3xl md:text-5xl font-display font-bold tracking-widest uppercase text-white">
-                COLLECTIONS
+                {cmsConfig.colTitle || 'COLLECTIONS'}
               </h3>
             </div>
 
@@ -696,13 +699,13 @@ export default function BrandActivationPage() {
           <div className="space-y-4">
             <div className="inline-flex items-center gap-2 bg-brand-red/10 border border-brand-red/20 px-4 py-1.5 rounded-full text-brand-red text-xs font-bold tracking-widest uppercase">
               <Sparkles className="w-3.5 h-3.5" />
-              LOS CREATIVE ENGINE
+              {cmsConfig.aiLabel || 'LOS CREATIVE ENGINE'}
             </div>
             <h2 className="text-4xl md:text-6xl font-display font-bold tracking-widest uppercase text-white">
-              KATT-AI STYLING ADVISOR
+              {cmsConfig.aiTitle || 'KATT-AI STYLING ADVISOR'}
             </h2>
             <p className="text-brand-muted text-sm max-w-lg mx-auto leading-relaxed">
-              Describe your environment, sizing preference, or outfit concept. Our Gemini-powered stylist will compile an elite urban-grunge layering prescription.
+              {cmsConfig.aiSubtitle || 'Describe your environment, sizing preference, or outfit concept. Our Gemini-powered stylist will compile an elite urban-grunge layering prescription.'}
             </p>
           </div>
 

@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from './SupabaseClient';
-import { LogOut, AlertCircle, LayoutDashboard, Ticket, QrCode, Settings } from 'lucide-react';
+import { LogOut, AlertCircle, LayoutDashboard, Ticket, QrCode, Settings, LayoutTemplate, ShoppingBag } from 'lucide-react';
 
 import AnalyticsTab from './AnalyticsTab';
 import OffersTab from './OffersTab';
 import CodesTab from './CodesTab';
 import SettingsTab from './SettingsTab';
+import CmsTab from './CmsTab';
+import ProductsTab from './ProductsTab';
 
 export default function BrandOwnerDashboard() {
   const [session, setSession] = useState(null);
@@ -145,6 +147,8 @@ export default function BrandOwnerDashboard() {
 
   const navItems = [
     { id: 'analytics', label: 'Overview', icon: LayoutDashboard },
+    { id: 'cms', label: 'Website CMS', icon: LayoutTemplate },
+    { id: 'products', label: 'Products', icon: ShoppingBag },
     { id: 'offers', label: 'Offers', icon: Ticket },
     { id: 'codes', label: 'QR Codes', icon: QrCode },
     { id: 'settings', label: 'Settings', icon: Settings },
@@ -204,6 +208,8 @@ export default function BrandOwnerDashboard() {
       <main className="flex-1 p-6 md:p-10 overflow-y-auto">
         <div className="max-w-5xl mx-auto">
           {activeTab === 'analytics' && <AnalyticsTab brand={brand} />}
+          {activeTab === 'cms' && <CmsTab brand={brand} onBrandUpdate={setBrand} />}
+          {activeTab === 'products' && <ProductsTab brand={brand} />}
           {activeTab === 'offers' && <OffersTab brand={brand} />}
           {activeTab === 'codes' && <CodesTab brand={brand} />}
           {activeTab === 'settings' && <SettingsTab brand={brand} onBrandUpdate={setBrand} />}
