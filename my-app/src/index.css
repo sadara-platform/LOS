@@ -1,7 +1,20 @@
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap');
 
 :root {
-  --text-color: #ffffff;
+  --color-primary: #7C3AED;
+  --color-on-primary: #FFFFFF;
+  --color-secondary: #A78BFA;
+  --color-on-secondary: #0F172A;
+  --color-accent: #F43F5E;
+  --color-on-accent: #FFFFFF;
+  --color-background: #0F0F23;
+  --color-foreground: #E2E8F0;
+  --color-card: #1E1C35;
+  --color-card-foreground: #E2E8F0;
+  --color-border: #4C1D95;
+  --color-ring: #7C3AED;
+  
+  --text-color: var(--color-foreground);
   --glass-bg: rgba(255, 255, 255, 0.05);
   --glass-border: rgba(255, 255, 255, 0.1);
 }
@@ -13,8 +26,8 @@
 }
 
 body {
-  font-family: 'Outfit', sans-serif;
-  background-color: #000;
+  font-family: 'Cairo', sans-serif;
+  background-color: var(--color-background);
   color: var(--text-color);
   overflow-x: hidden;
 }
@@ -75,7 +88,7 @@ body {
   align-items: center;
   text-align: center;
   padding: 2rem;
-  background: radial-gradient(circle at center, rgba(11, 9, 20, 0.4) 0%, rgba(11, 9, 20, 0.9) 100%);
+  background: radial-gradient(circle at center, rgba(15, 15, 35, 0.4) 0%, rgba(15, 15, 35, 0.9) 100%);
 }
 
 .hero-content {
@@ -89,18 +102,18 @@ body {
 
 /* Typography */
 .tournament-title {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Cairo', sans-serif;
   font-size: clamp(3rem, 8vw, 6rem);
-  font-weight: 800;
+  font-weight: 400;
   text-transform: uppercase;
   letter-spacing: 2px;
   margin: 0;
   /* Neon Gradient Fill */
-  background: linear-gradient(90deg, #ff00ff, #00f3ff);
+  background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   /* Glowing Text Shadow */
-  filter: drop-shadow(0 0 10px rgba(255, 0, 255, 0.5)) drop-shadow(0 0 30px rgba(0, 243, 255, 0.4));
+  filter: drop-shadow(0 0 10px rgba(124, 58, 237, 0.5)) drop-shadow(0 0 30px rgba(244, 63, 94, 0.4));
   line-height: 1.1;
 }
 
@@ -204,14 +217,14 @@ body {
 }
 
 .btn {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Cairo', sans-serif;
   font-size: 1.1rem;
-  font-weight: 800;
+  font-weight: 400;
   text-transform: uppercase;
-  padding: 1rem 2rem;
-  border-radius: 4px;
+  padding: 12px 24px;
+  border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 200ms ease;
   letter-spacing: 1px;
   position: relative;
   overflow: hidden;
@@ -221,30 +234,29 @@ body {
 }
 
 .btn-primary {
-  background: #ff00ff; /* Magenta */
-  color: #fff;
+  background: var(--color-accent);
+  color: var(--color-on-accent);
   border: none;
-  box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
 .btn-primary:hover {
-  box-shadow: 0 0 30px rgba(255, 0, 255, 0.8);
+  opacity: 0.9;
   transform: translateY(-2px);
-  background: #ff33ff;
+  box-shadow: 0 10px 15px rgba(244, 63, 94, 0.4);
 }
 
 .btn-secondary {
   background: transparent;
-  color: #00f3ff;
-  border: 2px solid #00f3ff;
-  box-shadow: 0 0 10px rgba(0, 243, 255, 0.2), inset 0 0 10px rgba(0, 243, 255, 0.1);
+  color: var(--color-primary);
+  border: 2px solid var(--color-primary);
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 
 .btn-secondary:hover {
-  background: rgba(0, 243, 255, 0.1);
-  box-shadow: 0 0 20px rgba(0, 243, 255, 0.5), inset 0 0 15px rgba(0, 243, 255, 0.3);
-  text-shadow: 0 0 8px #00f3ff;
+  background: rgba(124, 58, 237, 0.1);
   transform: translateY(-2px);
+  box-shadow: 0 10px 15px rgba(124, 58, 237, 0.3);
 }
 
 /* Rules Section */
@@ -355,7 +367,7 @@ body {
 }
 
 .rule-title {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Cairo', sans-serif;
   font-size: 1.8rem;
   font-weight: 800;
   color: #fff;
@@ -466,7 +478,7 @@ body {
 }
 
 .partner-name {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Cairo', sans-serif;
   font-weight: 800;
   font-size: 1.3rem;
   text-transform: uppercase;
@@ -579,7 +591,7 @@ body {
 }
 
 .hof-subtitle {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Cairo', sans-serif;
   font-size: clamp(1.5rem, 4vw, 2.5rem);
   font-weight: 800;
   color: #fff;
@@ -629,7 +641,7 @@ body {
 }
 
 .footer-brand h3 {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Cairo', sans-serif;
   font-size: 2.5rem;
   font-weight: 800;
   color: #fff;
@@ -736,7 +748,7 @@ body {
 
 /* Section Title */
 .section-title {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Cairo', sans-serif;
   font-size: clamp(2.5rem, 6vw, 4rem);
   font-weight: 800;
   text-transform: uppercase;
@@ -1066,6 +1078,269 @@ body {
   animation: float-slow 6s ease-in-out infinite;
 }
 
+.player-two .avatar {
+  border: 2px solid #ff00ff;
+  color: #ff00ff;
+  box-shadow: 0 0 15px rgba(255, 0, 255, 0.3);
+}
+
+.username {
+  font-weight: 800;
+  letter-spacing: 1px;
+  font-size: 1.2rem;
+}
+
+.player-one .username { color: #00f3ff; }
+.player-two .username { color: #ff00ff; }
+
+.vs-badge {
+  font-size: 2.5rem;
+  font-weight: 800;
+  font-style: italic;
+  color: #fff;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+/* XO Grid */
+.xo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  background: rgba(255,255,255,0.1);
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.cell {
+  width: 60px;
+  height: 60px;
+  background: rgba(0,0,0,0.6);
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  font-family: 'Outfit', sans-serif;
+  font-weight: 800;
+}
+
+.x-mark {
+  color: #00f3ff;
+  text-shadow: 0 0 10px #00f3ff;
+}
+
+.o-mark {
+  color: #ff00ff;
+  text-shadow: 0 0 10px #ff00ff;
+}
+
+/* Bracket Tree */
+.bracket-tree-container {
+  width: 100%;
+  overflow-x: auto;
+  padding-bottom: 2rem;
+  scrollbar-width: thin;
+  scrollbar-color: #00f3ff rgba(255, 255, 255, 0.1);
+}
+
+.bracket-tree-container::-webkit-scrollbar {
+  height: 8px;
+}
+
+.bracket-tree-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.bracket-tree-container::-webkit-scrollbar-thumb {
+  background: #00f3ff;
+  border-radius: 4px;
+}
+
+.bracket-tree {
+  display: flex;
+  justify-content: center;
+  gap: 4rem;
+  min-width: 700px; /* Forces scroll on small screens */
+  margin: 0 auto;
+}
+
+.bracket-round {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  gap: 1.5rem;
+  position: relative;
+}
+
+.matchbox {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 1.2rem;
+  border-radius: 6px;
+  min-width: 180px;
+  text-align: center;
+  font-weight: 500;
+  position: relative;
+  backdrop-filter: blur(5px);
+  color: #ccc;
+  transition: all 0.3s;
+}
+
+.matchbox:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: #00f3ff;
+  color: #fff;
+  box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+}
+
+/* Glowing connections using pseudo elements */
+.round-quarters .matchbox::after, .round-semis .matchbox::after {
+  content: '';
+  position: absolute;
+  right: -2rem;
+  top: 50%;
+  width: 2rem;
+  height: 2px;
+  background: rgba(0, 243, 255, 0.5);
+  box-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
+}
+
+.round-semis .matchbox::before, .round-final .matchbox::before {
+  content: '';
+  position: absolute;
+  left: -2rem;
+  top: 50%;
+  width: 2rem;
+  height: 2px;
+  background: rgba(0, 243, 255, 0.5);
+  box-shadow: 0 0 5px rgba(0, 243, 255, 0.5);
+}
+
+/* Bracket styling final */
+.final-matchbox {
+  border: 2px solid #ff00ff;
+  background: rgba(255, 0, 255, 0.1);
+  box-shadow: 0 0 20px rgba(255, 0, 255, 0.4), inset 0 0 10px rgba(255, 0, 255, 0.2);
+  color: #fff;
+  font-weight: 800;
+  text-shadow: 0 0 5px #ff00ff;
+}
+
+@media (max-width: 600px) {
+  .match-players {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+}
+
+
+/* Custom Scrollbar for Luxury Streetwear Vibe */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0A0A0A;
+}
+::-webkit-scrollbar-thumb {
+  background: #2D2D2D;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #D32F2F;
+}
+
+::selection {
+  background-color: #D32F2F;
+  color: #FFFFFF;
+}
+
+/* Organic droplets / blob layouts matching the elite editorial layout in the screenshot */
+.droplet-mask {
+  border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+}
+
+.editorial-curve {
+  border-radius: 0 0 100px 100px;
+}
+
+@keyframes float-slow {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+.animate-float {
+  animation: float-slow 6s ease-in-out infinite;
+}
+
 .text-glow-x { text-shadow: 0 0 10px rgba(34, 211, 238, 0.8), 0 0 20px rgba(34, 211, 238, 0.4); }
 .text-glow-o { text-shadow: 0 0 10px rgba(217, 70, 239, 0.8), 0 0 20px rgba(217, 70, 239, 0.4); }
 
+/* --- PRINT LAYOUT --- */
+@media print {
+  @page {
+    margin: 0;
+    size: portrait;
+  }
+  
+  body {
+    background: white;
+    color: black;
+  }
+  
+  /* Hide the dashboard UI */
+  .hide-on-print,
+  .md\:hidden,
+  .md\:static,
+  .fixed,
+  nav,
+  header {
+    display: none !important;
+  }
+
+  /* Override parent layout constraints that cut off extra pages */
+  html, body, #root, .app {
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* Target AdminLayout main containers safely */
+  body > div, #root > div, #root > div > div {
+    height: auto !important;
+    min-height: auto !important;
+    overflow: visible !important;
+  }
+
+  /* Show the print layout */
+  .print-only-layout {
+    display: block !important;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: white;
+  }
+  
+  .print-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.2cm;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 0.5cm;
+  }
+
+  .print-card-slot {
+    width: 8.5cm;
+    height: 5.5cm;
+    position: relative;
+    overflow: hidden;
+    page-break-inside: avoid;
+    break-inside: avoid;
+    /* subtle dashed border for cutting */
+    border: 1px dashed #ccc; 
+  }
+
+  /* Removed .print-card-wrapper transform scale to fix blank pages bug */
+}

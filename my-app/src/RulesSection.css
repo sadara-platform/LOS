@@ -86,19 +86,19 @@
 }
 
 /* Glowing Border Effects (Only apply to the active front-facing card) */
-.carousel-card.active-card.cyan-glow .card-glass {
-  border-color: rgba(0, 243, 255, 0.5);
-  box-shadow: 0 0 40px rgba(0, 243, 255, 0.3), inset 0 0 20px rgba(0, 243, 255, 0.1);
+.carousel-card.active-card.primary-glow .card-glass {
+  border-color: rgba(124, 58, 237, 0.5);
+  box-shadow: 0 0 40px rgba(124, 58, 237, 0.3), inset 0 0 20px rgba(124, 58, 237, 0.1);
 }
 
-.carousel-card.active-card.magenta-glow .card-glass {
-  border-color: rgba(255, 0, 255, 0.5);
-  box-shadow: 0 0 40px rgba(255, 0, 255, 0.3), inset 0 0 20px rgba(255, 0, 255, 0.1);
+.carousel-card.active-card.accent-glow .card-glass {
+  border-color: rgba(244, 63, 94, 0.5);
+  box-shadow: 0 0 40px rgba(244, 63, 94, 0.3), inset 0 0 20px rgba(244, 63, 94, 0.1);
 }
 
-.carousel-card.active-card.yellow-glow .card-glass {
-  border-color: rgba(255, 215, 0, 0.5);
-  box-shadow: 0 0 40px rgba(255, 215, 0, 0.3), inset 0 0 20px rgba(255, 215, 0, 0.1);
+.carousel-card.active-card.secondary-glow .card-glass {
+  border-color: rgba(167, 139, 250, 0.5);
+  box-shadow: 0 0 40px rgba(167, 139, 250, 0.3), inset 0 0 20px rgba(167, 139, 250, 0.1);
 }
 
 /* Icons inside the cards */
@@ -120,26 +120,26 @@
 }
 
 /* Activate SVGs glow when card is at the front */
-.active-card .cyan-glow-svg {
-  color: #00f3ff;
-  filter: drop-shadow(0 0 15px rgba(0, 243, 255, 0.8));
+.active-card .primary-glow-svg {
+  color: var(--color-primary);
+  filter: drop-shadow(0 0 15px rgba(124, 58, 237, 0.8));
 }
 
-.active-card .magenta-glow-svg {
-  color: #ff00ff;
-  filter: drop-shadow(0 0 15px rgba(255, 0, 255, 0.8));
+.active-card .accent-glow-svg {
+  color: var(--color-accent);
+  filter: drop-shadow(0 0 15px rgba(244, 63, 94, 0.8));
 }
 
-.active-card .yellow-glow-svg {
-  color: #ffd700;
-  filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.8));
+.active-card .secondary-glow-svg {
+  color: var(--color-secondary);
+  filter: drop-shadow(0 0 15px rgba(167, 139, 250, 0.8));
 }
 
 /* Typography inside the 3D Cards */
 .rule-title-3d {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Russo One', sans-serif;
   font-size: 2rem;
-  font-weight: 800;
+  font-weight: 400;
   color: #fff;
   letter-spacing: 1px;
   text-transform: uppercase;
@@ -147,9 +147,9 @@
   transition: all 0.4s ease;
 }
 
-.active-card.cyan-glow .rule-title-3d { text-shadow: 0 0 15px rgba(0, 243, 255, 0.5); }
-.active-card.magenta-glow .rule-title-3d { text-shadow: 0 0 15px rgba(255, 0, 255, 0.5); }
-.active-card.yellow-glow .rule-title-3d { text-shadow: 0 0 15px rgba(255, 215, 0, 0.5); }
+.active-card.primary-glow .rule-title-3d { text-shadow: 0 0 15px rgba(124, 58, 237, 0.5); }
+.active-card.accent-glow .rule-title-3d { text-shadow: 0 0 15px rgba(244, 63, 94, 0.5); }
+.active-card.secondary-glow .rule-title-3d { text-shadow: 0 0 15px rgba(167, 139, 250, 0.5); }
 
 .rule-desc-3d {
   font-size: 1.2rem;

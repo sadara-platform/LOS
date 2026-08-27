@@ -1,61 +1,49 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
+import { supabase } from './SupabaseClient';
 import './NetworkMarquee.css';
-
-const partnersData = [
-  {
-    title: "Apex Gear",
-    subtitle: "Apparel",
-    image: "https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=300&q=80",
-    borderColor: "#00f3ff",
-    gradient: "linear-gradient(135deg, rgba(0,243,255,0.2), rgba(0,0,0,0.8))"
-  },
-  {
-    title: "Neon Pixels",
-    subtitle: "Creative Agency",
-    image: "https://images.unsplash.com/photo-1552820728-8b83bb6b773f?auto=format&fit=crop&w=300&q=80",
-    borderColor: "#ff00ff",
-    gradient: "linear-gradient(135deg, rgba(255,0,255,0.2), rgba(0,0,0,0.8))"
-  },
-  {
-    title: "Cyber Core",
-    subtitle: "Hardware",
-    image: "https://images.unsplash.com/photo-1542751371-adc38448a05e?auto=format&fit=crop&w=300&q=80",
-    borderColor: "#ffd700",
-    gradient: "linear-gradient(135deg, rgba(255,215,0,0.2), rgba(0,0,0,0.8))"
-  },
-  {
-    title: "Global Net",
-    subtitle: "Internet Provider",
-    image: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=300&q=80",
-    borderColor: "#6a0dad",
-    gradient: "linear-gradient(135deg, rgba(106,13,173,0.2), rgba(0,0,0,0.8))"
-  },
-  {
-    title: "Volt Energy",
-    subtitle: "Energy Drink",
-    image: "https://images.unsplash.com/photo-1512418490979-9ce98fdb45e1?auto=format&fit=crop&w=300&q=80",
-    borderColor: "#00f3ff",
-    gradient: "linear-gradient(135deg, rgba(0,243,255,0.2), rgba(0,0,0,0.8))"
-  },
-  {
-    title: "Sonar Tech",
-    subtitle: "Audio Equipments",
-    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=300&q=80",
-    borderColor: "#ff00ff",
-    gradient: "linear-gradient(135deg, rgba(255,0,255,0.2), rgba(0,0,0,0.8))"
-  }
-];
-
-// Stagger the items for the bottom row so they aren't vertically identical to the top row
-const topRowData = [...partnersData];
-const bottomRowData = [...partnersData].reverse();
 
 export default function NetworkMarquee() {
   const containerRef = useRef(null);
+  const [brands, setBrands] = useState([]);
+
+  useEffect(() => {
+    const fetchBrands = async () => {
+      const { data, error } = await supabase
+        .from('brands')
+        .select('name, logo_url, primary_color')
+        .limit(10);
+      
+      if (error) {
+        console.error('Error fetching brands:', error);
+      } else if (data) {
+        const formattedBrands = data.map(brand => {
+          const color = brand.primary_color || '#7C3AED';
+          let r = 124, g = 58, b = 237;
+          if (color.startsWith('#') && color.length === 7) {
+            r = parseInt(color.slice(1, 3), 16);
+            g = parseInt(color.slice(3, 5), 16);
+            b = parseInt(color.slice(5, 7), 16);
+          }
+          return {
+            title: brand.name || 'Contractor',
+            subtitle: 'Contractor',
+            image: brand.logo_url || 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=300&q=80',
+            borderColor: color,
+            gradient: `linear-gradient(135deg, rgba(${r},${g},${b},0.2), rgba(0,0,0,0.8))`
+          };
+        });
+        setBrands(formattedBrands);
+      }
+    };
+    fetchBrands();
+  }, []);
+
+  const topRowData = [...brands];
+  const bottomRowData = [...brands].reverse();
 
   useEffect(() => {
     const container = containerRef.current;
-    if (!container) return;
+    if (!container || brands.length === 0) return;
 
     let targetX = -1000;
     let targetY = -1000;
@@ -107,20 +95,23 @@ export default function NetworkMarquee() {
       container.removeEventListener("mouseleave", handleMouseLeave);
       cancelAnimationFrame(animationFrameId);
     };
-  }, []);
+  }, [brands]);
+
+  // Don't render empty tracks if data is still loading
+  if (brands.length === 0) return null;
 
   return (
     <div className="network-marquee-wrapper" ref={containerRef}>
       <div className="network-header" style={{ position: 'relative', zIndex: 10, textAlign: 'center', paddingBottom: '3rem' }}>
-        <h2 className="section-title">THE LOS NETWORK</h2>
-        <p className="section-subtitle">Discover our exclusive partners. Get your codes today.</p>
+        <h2 className="section-title">شبكة LOS</h2>
+        <p className="section-subtitle">اكتشف شركاءنا الحصريين. احصل على أكوادك اليوم.</p>
       </div>
       
       <div className="marquee-tracks-container">
         
         {/* Top Row: Animates Right to Left */}
         <div className="chroma-grid track-top">
-          {[...topRowData, ...topRowData].map((partner, idx) => (
+          {[...topRowData, ...topRowData, ...topRowData].map((partner, idx) => (
             <div key={`top-${idx}`} className="chroma-card" style={{ '--border-color': partner.borderColor, '--card-gradient': partner.gradient }}>
               <div className="chroma-fade">
                 <img src={partner.image} alt={partner.title} className="chroma-image" />
@@ -142,7 +133,7 @@ export default function NetworkMarquee() {
 
         {/* Bottom Row: Animates Left to Right */}
         <div className="chroma-grid track-bottom">
-          {[...bottomRowData, ...bottomRowData].map((partner, idx) => (
+          {[...bottomRowData, ...bottomRowData, ...bottomRowData].map((partner, idx) => (
             <div key={`bottom-${idx}`} className="chroma-card" style={{ '--border-color': partner.borderColor, '--card-gradient': partner.gradient }}>
               <div className="chroma-fade">
                 <img src={partner.image} alt={partner.title} className="chroma-image" />

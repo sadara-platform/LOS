@@ -4,10 +4,10 @@ import './RulesSection.css';
 const rulesData = [
   {
     id: 1,
-    title: "Sudden Death",
-    desc: "Lose and you're out immediately.",
+    title: "الموت المفاجئ",
+    desc: "اخسر وتخرج على الفور.",
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="rule-svg cyan-glow-svg">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="rule-svg primary-glow-svg">
         <path d="M16 16l4 4"></path>
         <path d="M4 4l16 16"></path>
         <path d="M20 4l-4 4"></path>
@@ -15,35 +15,35 @@ const rulesData = [
         <circle cx="12" cy="12" r="3"></circle>
       </svg>
     ),
-    glowClass: 'cyan-glow'
+    glowClass: 'primary-glow'
   },
   {
     id: 2,
-    title: "Classic XO",
-    desc: "Pure strategy in a digital arena.",
+    title: "XO كلاسيكي",
+    desc: "استراتيجية نقية في ساحة رقمية.",
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="rule-svg magenta-glow-svg">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="rule-svg accent-glow-svg">
         <path d="M8 4v16"></path>
         <path d="M16 4v16"></path>
         <path d="M4 8h16"></path>
         <path d="M4 16h16"></path>
       </svg>
     ),
-    glowClass: 'magenta-glow'
+    glowClass: 'accent-glow'
   },
   {
     id: 3,
-    title: "Time Limit",
-    desc: "Hesitate, run out of time, and forfeit.",
+    title: "حد زمني",
+    desc: "تردد، ينفد الوقت، وتخسر.",
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="rule-svg yellow-glow-svg">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="rule-svg secondary-glow-svg">
         <circle cx="12" cy="13" r="8"></circle>
         <path d="M12 9v4l2 2"></path>
         <path d="M10 2h4"></path>
         <path d="M12 2v2"></path>
       </svg>
     ),
-    glowClass: 'yellow-glow'
+    glowClass: 'secondary-glow'
   }
 ];
 
@@ -114,7 +114,7 @@ export default function RulesSection() {
   return (
     <div className="rules-section-3d">
       <div className="rules-header">
-        <h2 className="section-title">RULES OF THE BATTLE</h2>
+        <h2 className="section-title">قواعد المعركة</h2>
       </div>
       
       <div className="carousel-wrapper">

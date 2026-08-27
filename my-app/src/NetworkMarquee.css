@@ -88,9 +88,9 @@
 }
 
 .chroma-fade h4 {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Russo One', sans-serif;
   font-size: 1.1rem; /* Smaller font for sleekness */
-  font-weight: 800;
+  font-weight: 400;
   text-transform: uppercase;
   color: #888;
   margin: 0 0 0.3rem 0;
@@ -153,9 +153,9 @@
 }
 
 .chroma-overlay h4 {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Russo One', sans-serif;
   font-size: 1.1rem;
-  font-weight: 800;
+  font-weight: 400;
   text-transform: uppercase;
   color: #fff;
   margin: 0 0 0.3rem 0;

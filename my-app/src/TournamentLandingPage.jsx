@@ -143,35 +143,34 @@ function TournamentLandingPage() {
 
       <div className="hero-section">
         <div className="hero-content">
-          <h1 className="tournament-title">LOS XO TOURNAMENT #1</h1>
+          <h1 className="tournament-title">LOS</h1>
           
           <div className="grand-prize-badge">
-            <span>GRAND PRIZE:</span> <span className="prize-amount">500,000 IQD</span>
+            <span>الجائزة الكبرى:</span> <span className="prize-amount">500,000 دينار عراقي</span>
           </div>
           
           <div className="countdown-container">
             <div className="countdown-box">
               <span className="countdown-value" id="days">00</span>
-              <span className="countdown-label">Days</span>
+              <span className="countdown-label">أيام</span>
             </div>
             <div className="countdown-box">
               <span className="countdown-value" id="hours">00</span>
-              <span className="countdown-label">Hours</span>
+              <span className="countdown-label">ساعات</span>
             </div>
             <div className="countdown-box">
               <span className="countdown-value" id="minutes">00</span>
-              <span className="countdown-label">Minutes</span>
+              <span className="countdown-label">دقائق</span>
             </div>
             <div className="countdown-box">
               <span className="countdown-value" id="seconds">00</span>
-              <span className="countdown-label">Seconds</span>
+              <span className="countdown-label">ثواني</span>
             </div>
           </div>
 
           <div className="cta-container">
-            <Link to="/arena" className="btn btn-primary" style={{ backgroundColor: '#22d3ee', color: '#000', textShadow: 'none', boxShadow: '0 0 20px rgba(34,211,238,0.5)' }}>ENTER XO ARENA</Link>
-            <button className="btn btn-primary">Login / My Account</button>
-            <button className="btn btn-secondary">How to Join?</button>
+            <Link to="/arena" className="btn btn-primary">أدخل ساحة XO</Link>
+            <button className="btn btn-primary">تسجيل الدخول / حسابي</button>
           </div>
         </div>
       </div>
@@ -184,7 +183,7 @@ function TournamentLandingPage() {
 
       <div className="hall-of-fame-section">
         <div className="hof-content">
-          <h2 className="section-title gold-title">HALL OF FAME</h2>
+          <h2 className="section-title gold-title">قاعة المشاهير</h2>
           
           <div className="hof-card">
             {/* 
@@ -207,8 +206,8 @@ function TournamentLandingPage() {
               </svg>
             </div>
             
-            <h3 className="hof-subtitle">WHO WILL BE THE FIRST CHAMPION?</h3>
-            <p className="hof-desc">The throne is empty. Activate your code and claim the 500,000 IQD grand prize.</p>
+            <h3 className="hof-subtitle">من سيكون البطل الأول؟</h3>
+            <p className="hof-desc">العرش فارغ. قم بتفعيل الكود الخاص بك واحصل على الجائزة الكبرى البالغة 500,000 دينار عراقي.</p>
           </div>
         </div>
       </div>
@@ -217,13 +216,13 @@ function TournamentLandingPage() {
         <div className="footer-content">
           <div className="footer-brand">
             <h3>LOS</h3>
-            <p>Last One Standing</p>
+            <p>الناجي الأخير</p>
           </div>
           
           <div className="footer-links">
-            <a href="#">How to Play</a>
-            <a href="#">Rules</a>
-            <a href="#">Dispute / Support</a>
+            <a href="#">طريقة اللعب</a>
+            <a href="#">القواعد</a>
+            <a href="#">النزاعات / الدعم</a>
           </div>
           
           <div className="footer-socials">

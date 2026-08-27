@@ -38,6 +38,8 @@ const AdminLayout = lazy(() => import('./AdminLayout'));
 const BrandList = lazy(() => import('./BrandList'));
 const BrandDashboard = lazy(() => import('./BrandDashboard'));
 const XoArena = lazy(() => import('./XoArena'));
+const CardPreview = lazy(() => import('./CardPreview'));
+const PrintCardsPage = lazy(() => import('./PrintCardsPage'));
 
 const LoadingFallback = () => (
   <div className="min-h-screen bg-[#0A0A0A] flex flex-col items-center justify-center text-white space-y-4">
@@ -55,6 +57,7 @@ function App() {
           <Route path="/" element={<TournamentLandingPage />} />
           <Route path="/:brandId" element={<BrandActivationPage />} />
           <Route path="/arena" element={<XoArena />} />
+          <Route path="/card-preview" element={<CardPreview />} />
           <Route path="/brand-dashboard" element={<BrandOwnerDashboard />} />
           
           {/* Admin Routes with Persistent Layout */}
@@ -64,6 +67,7 @@ function App() {
             <Route path="brands/:id" element={<BrandDashboard />} />
             <Route path="add-brand" element={<AddBrandPage />} />
             <Route path="tournament-control" element={<TournamentController />} />
+            <Route path="print-cards" element={<PrintCardsPage />} />
             <Route path="analytics" element={
               <div className="p-8 text-center text-gray-500">
                 <h2 className="text-2xl font-bold mb-2">Analytics Module</h2>
