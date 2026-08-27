@@ -8,6 +8,7 @@ export default function PrintCardsPage() {
   const [quantity, setQuantity] = useState(10);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedCodes, setGeneratedCodes] = useState([]);
+  const [isPrintingBacks, setIsPrintingBacks] = useState(false);
 
   useEffect(() => {
     fetchBrands();
@@ -70,6 +71,25 @@ export default function PrintCardsPage() {
     }
   };
 
+  const handlePrintBacks = () => {
+    if (quantity < 1 || quantity > 500) {
+      alert("Please select a quantity between 1 and 500.");
+      return;
+    }
+    setIsGenerating(true);
+    setIsPrintingBacks(true);
+    
+    // Create an array of empty objects just to loop over the quantity
+    const mockCodes = Array.from({ length: quantity }).map(() => ({}));
+    setGeneratedCodes(mockCodes);
+
+    setTimeout(() => {
+      window.print();
+      setIsGenerating(false);
+      setIsPrintingBacks(false);
+    }, 1000);
+  };
+
   return (
     <div className="min-h-screen text-white print-wrapper">
       
@@ -82,7 +102,7 @@ export default function PrintCardsPage() {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <div className="flex flex-col gap-2">
-              <label className="text-gray-400 text-sm font-medium">Select Brand</label>
+              <label className="text-gray-400 text-sm font-medium">Select Brand (For Fronts)</label>
               <select
                 className="bg-[#1A1A1A] border border-white/10 rounded-lg p-3 text-white focus:border-cyan-400 focus:outline-none transition-colors"
                 value={selectedBrand}
@@ -110,25 +130,39 @@ export default function PrintCardsPage() {
             </div>
           </div>
 
-          <button
-            onClick={handleGenerateAndPrint}
-            disabled={isGenerating || !selectedBrand}
-            className={`w-full py-4 rounded-xl font-bold text-lg tracking-wide transition-all ${
-              isGenerating || !selectedBrand
-                ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                : 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 shadow-[0_0_20px_rgba(34,211,238,0.3)]'
-            }`}
-          >
-            {isGenerating ? 'Generating & Preparing Print...' : `Generate & Print ${quantity} Cards`}
-          </button>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <button
+              onClick={handleGenerateAndPrint}
+              disabled={isGenerating || !selectedBrand}
+              className={`w-full py-4 rounded-xl font-bold text-lg tracking-wide transition-all ${
+                isGenerating || !selectedBrand
+                  ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                  : 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 shadow-[0_0_20px_rgba(34,211,238,0.3)]'
+              }`}
+            >
+              {isGenerating && !isPrintingBacks ? 'Generating...' : `Generate & Print Fronts`}
+            </button>
+
+            <button
+              onClick={handlePrintBacks}
+              disabled={isGenerating}
+              className={`w-full py-4 rounded-xl font-bold text-lg tracking-wide transition-all ${
+                isGenerating
+                  ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                  : 'bg-[#1A1A1A] border border-white/20 text-white hover:bg-white/10'
+              }`}
+            >
+              {isPrintingBacks ? 'Preparing Print...' : `Print ${quantity} Backs`}
+            </button>
+          </div>
         </div>
         
         <div className="bg-blue-900/20 border border-blue-500/30 rounded-xl p-6 text-blue-200 text-sm">
           <p className="font-semibold mb-2">How it works:</p>
           <ul className="list-disc list-inside space-y-1 opacity-80">
             <li>Select a brand to tie the generated codes to their specific campaign/budget.</li>
-            <li>Clicking "Generate & Print" creates unique codes securely in the database.</li>
-            <li>The browser's print dialog will open automatically. Save as PDF or print directly to a high-quality printer.</li>
+            <li>Clicking "Generate & Print Fronts" creates unique codes securely in the database.</li>
+            <li>To print the backs of the cards, load your printed pages back into the printer and click "Print Backs".</li>
             <li>For best results, set margins to "None" in your print dialog.</li>
           </ul>
         </div>
@@ -139,27 +173,38 @@ export default function PrintCardsPage() {
         <div className="print-grid">
           {generatedCodes.map((item, index) => (
             <div key={index} className="print-card-slot">
-              {/* The base card dimensions using percentage positioning for reliable printing */}
-              <div className="relative w-full h-full overflow-hidden bg-black">
-                <img
-                  src="/IMG_2571.PNG"
-                  className="absolute top-0 left-0 w-full h-full object-cover"
-                  alt="Card Background"
-                />
-                
-                {/* QR Code replaces the grey box */}
-                <div 
-                  className="absolute flex items-center justify-center bg-white p-0.5 rounded-sm shadow-inner"
-                  style={{ top: '72.15%', left: '77.19%', width: '13.44%', height: '19.53%' }}
-                >
-                  <QRCodeCanvas 
-                    value={`https://11los11.netlify.app/activate?code=${item.code}`}
-                    style={{ width: '100%', height: '100%' }}
-                    level={"H"}
-                    includeMargin={false}
+              {isPrintingBacks ? (
+                /* --- BACKFACE LAYOUT --- */
+                <div className="relative w-full h-full overflow-hidden bg-black">
+                  <img
+                    src="/card_back.png"
+                    className="absolute top-0 left-0 w-full h-full object-cover"
+                    alt="Card Backface"
                   />
                 </div>
-              </div>
+              ) : (
+                /* --- FRONTFACE LAYOUT --- */
+                <div className="relative w-full h-full overflow-hidden bg-black">
+                  <img
+                    src="/IMG_2571.PNG"
+                    className="absolute top-0 left-0 w-full h-full object-cover"
+                    alt="Card Background"
+                  />
+                  
+                  {/* QR Code replaces the grey box */}
+                  <div 
+                    className="absolute flex items-center justify-center bg-white p-0.5 rounded-sm shadow-inner"
+                    style={{ top: '72.15%', left: '77.19%', width: '13.44%', height: '19.53%' }}
+                  >
+                    <QRCodeCanvas 
+                      value={`https://11los11.netlify.app/activate?code=${item.code}`}
+                      style={{ width: '100%', height: '100%' }}
+                      level={"H"}
+                      includeMargin={false}
+                    />
+                  </div>
+                </div>
+              )}
             </div>
           ))}
         </div>
