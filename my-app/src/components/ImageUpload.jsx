@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { supabase } from '../supabaseClient';
+import { supabase } from '../SupabaseClient';
 import { UploadCloud, Image as ImageIcon, X, Loader2 } from 'lucide-react';
 
 export default function ImageUpload({ onUploadSuccess, currentImage, bucketName = 'brand-assets' }) {

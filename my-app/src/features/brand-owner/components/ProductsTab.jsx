@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../../../supabaseClient';
+import { supabase } from '../../../SupabaseClient';
 import { ShoppingBag, Plus, Trash2, Edit2, AlertCircle } from 'lucide-react';
 import ImageUpload from '../../../components/ImageUpload';
 

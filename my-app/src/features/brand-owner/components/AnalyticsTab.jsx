@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../../../supabaseClient'; // keep existing import
+import { supabase } from '../../../SupabaseClient'; // keep existing import
 import { BarChart3 } from 'lucide-react';
 
 export default function AnalyticsTab({ brand }) {

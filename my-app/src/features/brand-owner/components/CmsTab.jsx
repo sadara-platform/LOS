@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../../../supabaseClient';
+import { supabase } from '../../../SupabaseClient';
 import { LayoutTemplate, CheckCircle2, AlertCircle } from 'lucide-react';
 
 const defaultCmsConfig = {

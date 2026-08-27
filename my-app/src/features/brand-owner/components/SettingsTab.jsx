@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { supabase } from '../../../supabaseClient';
+import { supabase } from '../../../SupabaseClient';
 import { Settings, AlertCircle, CheckCircle2 } from 'lucide-react';
 
 export default function SettingsTab({ brand, onBrandUpdate }) {
