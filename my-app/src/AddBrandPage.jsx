@@ -151,7 +151,7 @@ export default function AddBrandPage() {
         owner_id: newOwnerId // Assign the newly created user as the owner
       };
 
-      const { supabase } = await import('./supabaseClient');
+      const { supabase } = await import('./SupabaseClient');
       const { data, error } = await supabase
         .from('brands')
         .insert([payload])

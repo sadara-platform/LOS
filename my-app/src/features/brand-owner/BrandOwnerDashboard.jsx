@@ -6,7 +6,7 @@ import AnalyticsTab from './components/AnalyticsTab';
 import OffersTab from './components/OffersTab';
 import CodesTab from './components/CodesTab';
 import SettingsTab from './components/SettingsTab';
-import CmsTab from './components/CMSTab';
+import CmsTab from './components/CmsTab';
 import ProductsTab from './components/ProductsTab';
 
 export default function BrandOwnerDashboard() {
