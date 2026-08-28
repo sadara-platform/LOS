@@ -37,28 +37,43 @@ export default function PrintCardsPage() {
     setIsGenerating(true);
 
     try {
-      // 1. Generate random codes
-      const newCodes = Array.from({ length: quantity }).map(() => {
-        // Generate random 8-character code like X8K29M4L
+      // 1. Get current exact count securely via the new Supabase RPC function (bypasses RLS)
+      const { data: count, error: countError } = await supabase.rpc('get_codes_count');
+
+      if (countError) {
+        throw new Error("Failed to get database count: " + countError.message);
+      }
+
+      const startingNumber = (count || 0) + 1;
+
+      // 2. Generate random codes with sequential numbers
+      const newCodes = Array.from({ length: quantity }).map((_, index) => {
         const randomStr = Math.random().toString(36).substring(2, 10).toUpperCase();
         return {
           brand_id: selectedBrand,
           code: randomStr,
           status: 'unused',
+          cardNumber: startingNumber + index
         };
       });
 
-      // 2. Insert into Supabase
+      // 3. Insert into Supabase (cardNumber is not in schema yet, so we map it out)
+      const dbPayload = newCodes.map(c => ({
+        brand_id: c.brand_id,
+        code: c.code,
+        status: c.status
+      }));
+
       const { error } = await supabase
         .from('codes')
-        .insert(newCodes);
+        .insert(dbPayload);
 
       if (error) throw error;
 
-      // 3. Set generated codes to state for rendering
+      // 4. Set generated codes to state for rendering (includes cardNumber)
       setGeneratedCodes(newCodes);
 
-      // 4. Wait for render, then print
+      // 5. Wait for render, then print
       setTimeout(() => {
         window.print();
         setIsGenerating(false);
@@ -76,12 +91,21 @@ export default function PrintCardsPage() {
       alert("Please select a quantity between 1 and 500.");
       return;
     }
+
+    if (generatedCodes.length === 0) {
+      alert("Please 'Generate & Print Fronts' first so we know which numbers to print on the backs!");
+      return;
+    }
+
+    if (generatedCodes.length !== quantity) {
+      alert(`Warning: The quantity selected (${quantity}) does not match the recently generated batch (${generatedCodes.length}). Please generate a new batch first.`);
+      return;
+    }
+
     setIsGenerating(true);
     setIsPrintingBacks(true);
-    
-    // Create an array of empty objects just to loop over the quantity
-    const mockCodes = Array.from({ length: quantity }).map(() => ({}));
-    setGeneratedCodes(mockCodes);
+
+    // We reuse the existing generatedCodes state because it contains the correct sequential cardNumbers
 
     setTimeout(() => {
       window.print();
@@ -92,15 +116,15 @@ export default function PrintCardsPage() {
 
   return (
     <div className="min-h-screen text-white print-wrapper">
-      
+
       {/* --- DASHBOARD UI (Hidden during print) --- */}
       <div className="p-8 max-w-4xl mx-auto hide-on-print">
         <h1 className="text-3xl font-bold mb-8 text-cyan-400">Card Printing Studio</h1>
-        
+
         <div className="bg-[#111] border border-white/10 rounded-2xl p-8 mb-8 shadow-xl">
           <h2 className="text-xl font-semibold mb-6">Setup Print Batch</h2>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <div className="flex flex-col gap-2">
               <label className="text-gray-400 text-sm font-medium">Select Brand (For Fronts)</label>
               <select
@@ -134,11 +158,10 @@ export default function PrintCardsPage() {
             <button
               onClick={handleGenerateAndPrint}
               disabled={isGenerating || !selectedBrand}
-              className={`w-full py-4 rounded-xl font-bold text-lg tracking-wide transition-all ${
-                isGenerating || !selectedBrand
-                  ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 shadow-[0_0_20px_rgba(34,211,238,0.3)]'
-              }`}
+              className={`w-full py-4 rounded-xl font-bold text-lg tracking-wide transition-all ${isGenerating || !selectedBrand
+                ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                : 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 shadow-[0_0_20px_rgba(34,211,238,0.3)]'
+                }`}
             >
               {isGenerating && !isPrintingBacks ? 'Generating...' : `Generate & Print Fronts`}
             </button>
@@ -146,17 +169,16 @@ export default function PrintCardsPage() {
             <button
               onClick={handlePrintBacks}
               disabled={isGenerating}
-              className={`w-full py-4 rounded-xl font-bold text-lg tracking-wide transition-all ${
-                isGenerating
-                  ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
-                  : 'bg-[#1A1A1A] border border-white/20 text-white hover:bg-white/10'
-              }`}
+              className={`w-full py-4 rounded-xl font-bold text-lg tracking-wide transition-all ${isGenerating
+                ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
+                : 'bg-[#1A1A1A] border border-white/20 text-white hover:bg-white/10'
+                }`}
             >
               {isPrintingBacks ? 'Preparing Print...' : `Print ${quantity} Backs`}
             </button>
           </div>
         </div>
-        
+
         <div className="bg-blue-900/20 border border-blue-500/30 rounded-xl p-6 text-blue-200 text-sm">
           <p className="font-semibold mb-2">How it works:</p>
           <ul className="list-disc list-inside space-y-1 opacity-80">
@@ -181,6 +203,12 @@ export default function PrintCardsPage() {
                     className="absolute top-0 left-0 w-full h-full object-cover"
                     alt="Card Backface"
                   />
+                  <div
+                    className="absolute text-white/50 font-mono z-10"
+                    style={{ top: '3%', left: '3%', fontSize: '6px' }}
+                  >
+                    {item.cardNumber}
+                  </div>
                 </div>
               ) : (
                 /* --- FRONTFACE LAYOUT --- */
@@ -190,18 +218,26 @@ export default function PrintCardsPage() {
                     className="absolute top-0 left-0 w-full h-full object-cover"
                     alt="Card Background"
                   />
-                  
+
                   {/* QR Code replaces the grey box */}
-                  <div 
+                  <div
                     className="absolute flex items-center justify-center bg-white p-0.5 rounded-sm shadow-inner"
                     style={{ top: '72.15%', left: '77.19%', width: '13.44%', height: '19.53%' }}
                   >
-                    <QRCodeCanvas 
+                    <QRCodeCanvas
                       value={`https://11los11.netlify.app/activate?code=${item.code}`}
                       style={{ width: '100%', height: '100%' }}
                       level={"H"}
                       includeMargin={false}
                     />
+                  </div>
+
+                  {/* Card Number Overlay */}
+                  <div
+                    className="absolute text-white/50 font-mono z-10"
+                    style={{ top: '0.5%', left: '1%', fontSize: '6px' }}
+                  >
+                    {item.cardNumber}
                   </div>
                 </div>
               )}

@@ -1310,6 +1310,8 @@ body {
     height: auto !important;
     min-height: auto !important;
     overflow: visible !important;
+    padding: 0 !important;
+    margin: 0 !important;
   }
 
   /* Show the print layout */
@@ -1320,15 +1322,18 @@ body {
     left: 0;
     width: 100%;
     background: white;
+    margin: 0 !important;
+    padding: 0 !important;
   }
   
   .print-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.2cm;
+    gap: 0.1cm;
     justify-content: flex-start;
     align-items: flex-start;
-    padding: 0.5cm;
+    padding: 0.1cm;
+    margin: 0;
   }
 
   .print-card-slot {
@@ -1340,6 +1345,7 @@ body {
     break-inside: avoid;
     /* subtle dashed border for cutting */
     border: 1px dashed #ccc; 
+    box-sizing: border-box;
   }
 
   /* Removed .print-card-wrapper transform scale to fix blank pages bug */
