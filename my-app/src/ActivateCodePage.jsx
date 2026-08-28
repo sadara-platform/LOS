@@ -20,14 +20,11 @@ export default function ActivateCodePage() {
 
     const verifyCode = async () => {
       try {
-        // 1. Find the code in the database
+        // 1. Securely find the code in the database using RPC
         const { data: codeData, error: codeError } = await supabase
-          .from('codes')
-          .select('*, brands(id, slug)')
-          .eq('code', code)
-          .single();
+          .rpc('get_code_brand_slug', { p_code: code });
 
-        if (codeError || !codeData) {
+        if (codeError || !codeData || !codeData.success) {
           setStatus('error');
           setErrorMessage('This card code is invalid or does not exist.');
           return;
@@ -40,7 +37,7 @@ export default function ActivateCodePage() {
         }
 
         // 3. Card is assigned! Redirect to the brand's actual page
-        const brandSlug = codeData.brands?.slug;
+        const brandSlug = codeData.brand_slug;
         if (brandSlug) {
           navigate(`/${brandSlug}?code=${code}`, { replace: true });
         } else {
