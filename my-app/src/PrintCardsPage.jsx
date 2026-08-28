@@ -3,32 +3,12 @@ import { supabase } from './SupabaseClient';
 import { QRCodeCanvas } from 'qrcode.react';
 
 export default function PrintCardsPage() {
-  const [brands, setBrands] = useState([]);
-  const [selectedBrand, setSelectedBrand] = useState('');
   const [quantity, setQuantity] = useState(10);
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedCodes, setGeneratedCodes] = useState([]);
   const [isPrintingBacks, setIsPrintingBacks] = useState(false);
 
-  useEffect(() => {
-    fetchBrands();
-  }, []);
-
-  const fetchBrands = async () => {
-    const { data, error } = await supabase.from('brands').select('id, name');
-    if (data) {
-      setBrands(data);
-      if (data.length > 0) setSelectedBrand(data[0].id);
-    } else if (error) {
-      console.error('Error fetching brands:', error);
-    }
-  };
-
   const handleGenerateAndPrint = async () => {
-    if (!selectedBrand) {
-      alert("Please select a brand first.");
-      return;
-    }
     if (quantity < 1 || quantity > 500) {
       alert("Please select a quantity between 1 and 500.");
       return;
@@ -50,18 +30,17 @@ export default function PrintCardsPage() {
       const newCodes = Array.from({ length: quantity }).map((_, index) => {
         const randomStr = Math.random().toString(36).substring(2, 10).toUpperCase();
         return {
-          brand_id: selectedBrand,
           code: randomStr,
           status: 'unused',
           cardNumber: startingNumber + index
         };
       });
 
-      // 3. Insert into Supabase (cardNumber is not in schema yet, so we map it out)
+      // 3. Insert into Supabase (saving card_number, omitting brand_id)
       const dbPayload = newCodes.map(c => ({
-        brand_id: c.brand_id,
         code: c.code,
-        status: c.status
+        status: c.status,
+        card_number: c.cardNumber
       }));
 
       const { error } = await supabase
@@ -70,7 +49,7 @@ export default function PrintCardsPage() {
 
       if (error) throw error;
 
-      // 4. Set generated codes to state for rendering (includes cardNumber)
+      // 4. Set generated codes to state for rendering
       setGeneratedCodes(newCodes);
 
       // 5. Wait for render, then print
@@ -124,41 +103,24 @@ export default function PrintCardsPage() {
         <div className="bg-[#111] border border-white/10 rounded-2xl p-8 mb-8 shadow-xl">
           <h2 className="text-xl font-semibold mb-6">Setup Print Batch</h2>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-            <div className="flex flex-col gap-2">
-              <label className="text-gray-400 text-sm font-medium">Select Brand (For Fronts)</label>
-              <select
-                className="bg-[#1A1A1A] border border-white/10 rounded-lg p-3 text-white focus:border-cyan-400 focus:outline-none transition-colors"
-                value={selectedBrand}
-                onChange={(e) => setSelectedBrand(e.target.value)}
-                disabled={isGenerating}
-              >
-                {brands.length === 0 && <option value="">Loading brands...</option>}
-                {brands.map((b) => (
-                  <option key={b.id} value={b.id}>{b.name}</option>
-                ))}
-              </select>
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <label className="text-gray-400 text-sm font-medium">Quantity to Print</label>
-              <input
-                type="number"
-                min="1"
-                max="500"
-                value={quantity}
-                onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
-                disabled={isGenerating}
-                className="bg-[#1A1A1A] border border-white/10 rounded-lg p-3 text-white focus:border-cyan-400 focus:outline-none transition-colors"
-              />
-            </div>
+          <div className="flex flex-col gap-2 mb-8 max-w-xs">
+            <label className="text-gray-400 text-sm font-medium">Quantity to Print</label>
+            <input
+              type="number"
+              min="1"
+              max="500"
+              value={quantity}
+              onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
+              disabled={isGenerating}
+              className="bg-[#1A1A1A] border border-white/10 rounded-lg p-3 text-white focus:border-cyan-400 focus:outline-none transition-colors"
+            />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <button
               onClick={handleGenerateAndPrint}
-              disabled={isGenerating || !selectedBrand}
-              className={`w-full py-4 rounded-xl font-bold text-lg tracking-wide transition-all ${isGenerating || !selectedBrand
+              disabled={isGenerating}
+              className={`w-full py-4 rounded-xl font-bold text-lg tracking-wide transition-all ${isGenerating
                 ? 'bg-gray-600 text-gray-400 cursor-not-allowed'
                 : 'bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 shadow-[0_0_20px_rgba(34,211,238,0.3)]'
                 }`}

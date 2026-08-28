@@ -53,11 +53,12 @@ export default function AdminLayout() {
   const toggleMenu = () => setMobileMenuOpen(!mobileMenuOpen);
   const closeMenu = () => setMobileMenuOpen(false);
 
-  const navItems = [
+    const navItems = [
     { to: "/admin/brands", icon: <BrandIcon />, label: "Brands Directory" },
     { to: "/admin/add-brand", icon: <PlusIcon />, label: "Add Brand" },
     { to: "/admin/tournament-control", icon: <ControlIcon />, label: "Mission Control" },
     { to: "/admin/print-cards", icon: <PrintIcon />, label: "Print Cards" },
+    { to: "/admin/assign-cards", icon: <PlusIcon />, label: "Assign Cards" },
     { to: "/admin/analytics", icon: <ChartIcon />, label: "Analytics" },
   ];
 
