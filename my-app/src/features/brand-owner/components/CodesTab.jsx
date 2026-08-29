@@ -1,10 +1,26 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { supabase } from '../../../SupabaseClient';
+import { Scanner } from '@yudiel/react-qr-scanner';
+import { QrCode, X } from 'lucide-react';
 
 export default function CodesTab({ brand }) {
+  const location = useLocation();
   const [codes, setCodes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isScanning, setIsScanning] = useState(location.state?.isScanning || false);
+
+  const handleScan = (result) => {
+    if (result && result.length > 0) {
+      const url = result[0].rawValue;
+      if (url.includes('/redeem-offer/')) {
+        window.location.href = url; // Navigate to redemption page
+      } else {
+        alert("Invalid QR Code for Offer Redemption.");
+      }
+    }
+  };
 
   useEffect(() => {
     async function fetchCodes() {
@@ -66,6 +82,33 @@ export default function CodesTab({ brand }) {
             <span className="absolute right-0 bottom-2 w-2 h-4 bg-primary cursor-blink hidden group-focus-within:block"></span>
           </div>
         </section>
+
+        {/* Scanner Section */}
+        {isScanning ? (
+          <section className="glass-panel rounded-xl overflow-hidden p-6 bg-white/5 border border-primary relative flex flex-col items-center">
+            <button 
+              onClick={() => setIsScanning(false)}
+              className="absolute top-4 right-4 text-on-surface-variant hover:text-white bg-black/50 p-2 rounded-full z-10"
+            >
+              <X className="w-5 h-5" />
+            </button>
+            <h2 className="font-code-sm text-primary mb-4 tracking-widest uppercase">SCANNING_PLAYER_OFFER...</h2>
+            <div className="w-full max-w-sm rounded-lg overflow-hidden border-2 border-primary shadow-[0_0_20px_rgba(255,0,85,0.2)]">
+              <Scanner 
+                onScan={handleScan}
+                onError={(error) => console.error(error?.message)}
+              />
+            </div>
+          </section>
+        ) : (
+          <button 
+            onClick={() => setIsScanning(true)}
+            className="w-full group flex items-center justify-center gap-3 bg-primary/10 border border-primary px-8 py-5 hover:bg-primary hover:text-white transition-all duration-300 neon-shadow rounded-lg text-primary"
+          >
+            <QrCode className="w-6 h-6" />
+            <span className="font-code-sm text-code-sm uppercase tracking-widest font-black">ACTIVATE_QR_SCANNER</span>
+          </button>
+        )}
 
         {/* Data Table Section */}
         <section className="glass-panel rounded-xl overflow-hidden p-[1px] bg-white/5 border border-white/10">

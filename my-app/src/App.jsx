@@ -43,6 +43,12 @@ const PrintCardsPage = lazy(() => import('./PrintCardsPage'));
 const AssignCardsPage = lazy(() => import('./AssignCardsPage'));
 const ActivateCodePage = lazy(() => import('./ActivateCodePage'));
 
+const PlayerLayout = lazy(() => import('./layouts/PlayerLayout'));
+const ArenaDashboard = lazy(() => import('./pages/ArenaDashboard'));
+const DiscountsLibrary = lazy(() => import('./pages/DiscountsLibrary'));
+const LoginPage = lazy(() => import('./pages/LoginPage'));
+const OfferRedemptionPage = lazy(() => import('./pages/OfferRedemptionPage'));
+
 const LoadingFallback = () => (
   <div className="min-h-screen bg-[#0A0A0A] flex flex-col items-center justify-center text-white space-y-4">
     <div className="w-12 h-12 border-4 border-white/10 border-t-blue-600 rounded-full animate-spin"></div>
@@ -57,11 +63,20 @@ function App() {
         <Suspense fallback={<LoadingFallback />}>
           <Routes>
           <Route path="/" element={<TournamentLandingPage />} />
+          <Route path="/login" element={<LoginPage />} />
           <Route path="/activate" element={<ActivateCodePage />} />
           <Route path="/:brandId" element={<BrandActivationPage />} />
           <Route path="/arena" element={<XoArena />} />
           <Route path="/card-preview" element={<CardPreview />} />
           <Route path="/brand-dashboard" element={<BrandOwnerDashboard />} />
+          <Route path="/redeem-offer/:redemptionId" element={<OfferRedemptionPage />} />
+          
+          {/* Authenticated Player App Routes */}
+          <Route path="/app" element={<PlayerLayout />}>
+            <Route index element={<Navigate to="arena" replace />} />
+            <Route path="arena" element={<ArenaDashboard />} />
+            <Route path="discounts" element={<DiscountsLibrary />} />
+          </Route>
           
           {/* Admin Routes with Persistent Layout */}
           <Route path="/admin" element={<AdminLayout />}>

@@ -7,7 +7,7 @@ export default function OffersTab({ brand }) {
   const [loading, setLoading] = useState(true);
   const [isAdding, setIsAdding] = useState(false);
   
-  const [newOffer, setNewOffer] = useState({ title: '', description: '', status: 'active' });
+  const [newOffer, setNewOffer] = useState({ title: '', description: '', discount_code: '', discount_amount: '', status: 'active' });
   const [errorMsg, setErrorMsg] = useState('');
 
   useEffect(() => {
@@ -40,6 +40,8 @@ export default function OffersTab({ brand }) {
         brand_id: brand.id,
         title: newOffer.title,
         description: newOffer.description,
+        discount_code: newOffer.discount_code,
+        discount_amount: newOffer.discount_amount,
         status: newOffer.status
       }]).select();
 
@@ -47,7 +49,7 @@ export default function OffersTab({ brand }) {
       
       setOffers([data[0], ...offers]);
       setIsAdding(false);
-      setNewOffer({ title: '', description: '', status: 'active' });
+      setNewOffer({ title: '', description: '', discount_code: '', discount_amount: '', status: 'active' });
     } catch (err) {
       setErrorMsg(err.message);
     }
@@ -152,6 +154,37 @@ export default function OffersTab({ brand }) {
                   />
                 </div>
 
+                <div className="flex flex-col md:flex-row gap-6">
+                  {/* Field: Discount Code */}
+                  <div className="flex flex-col gap-2 flex-1">
+                    <label className="text-on-surface-variant flex items-center gap-2">
+                      <span className="text-primary">&gt;</span> PROMO_CODE_
+                    </label>
+                    <input 
+                      value={newOffer.discount_code}
+                      onChange={e => setNewOffer({...newOffer, discount_code: e.target.value})}
+                      className="bg-transparent border-0 border-b-2 border-white/20 text-white focus:ring-0 focus:border-primary py-3 px-0 w-full placeholder:text-zinc-600 transition-colors uppercase" 
+                      placeholder="e.g. SUMMER20 (Optional)" 
+                      type="text"
+                    />
+                  </div>
+
+                  {/* Field: Discount Amount */}
+                  <div className="flex flex-col gap-2 flex-1">
+                    <label className="text-on-surface-variant flex items-center gap-2">
+                      <span className="text-primary">&gt;</span> DISCOUNT_VALUE_
+                    </label>
+                    <input 
+                      required
+                      value={newOffer.discount_amount}
+                      onChange={e => setNewOffer({...newOffer, discount_amount: e.target.value})}
+                      className="bg-transparent border-0 border-b-2 border-white/20 text-white focus:ring-0 focus:border-primary py-3 px-0 w-full placeholder:text-zinc-600 transition-colors" 
+                      placeholder="e.g. 20% OFF or $10" 
+                      type="text"
+                    />
+                  </div>
+                </div>
+
                 {/* Field: Description */}
                 <div className="flex flex-col gap-2">
                   <label className="text-on-surface-variant flex items-center gap-2">
@@ -190,9 +223,10 @@ export default function OffersTab({ brand }) {
           
           <div className="w-full flex flex-col gap-4 font-code-sm text-[13px]">
             {/* Header Row */}
-            <div className="grid grid-cols-6 gap-4 px-6 py-3 text-on-surface-variant uppercase tracking-widest border-b border-white/5 mb-2">
+            <div className="grid grid-cols-8 gap-4 px-6 py-3 text-on-surface-variant uppercase tracking-widest border-b border-white/5 mb-2">
               <div className="col-span-2">OFFER_TITLE</div>
               <div className="col-span-2">DESCRIPTION</div>
+              <div className="col-span-2">VALUE / CODE</div>
               <div className="col-span-2 text-right">STATUS/ACT</div>
             </div>
             
@@ -201,9 +235,13 @@ export default function OffersTab({ brand }) {
               <div className="text-center p-8 text-zinc-600 italic border-2 border-dashed border-white/5 rounded">NO RECORDS FOUND</div>
             ) : (
               offers.map((offer, index) => (
-                <div key={offer.id} className={`grid grid-cols-6 gap-4 items-center px-6 py-5 ${offer.status === 'active' ? 'bg-white/5 border-white/10' : 'bg-black/40 border-white/5 opacity-70'} backdrop-blur-md border rounded transition-all duration-300 hover:-translate-y-2 hover:backdrop-blur-xl hover:bg-white/10 hover:border-primary/30 group`}>
+                <div key={offer.id} className={`grid grid-cols-8 gap-4 items-center px-6 py-5 ${offer.status === 'active' ? 'bg-white/5 border-white/10' : 'bg-black/40 border-white/5 opacity-70'} backdrop-blur-md border rounded transition-all duration-300 hover:-translate-y-2 hover:backdrop-blur-xl hover:bg-white/10 hover:border-primary/30 group`}>
                   <div className="col-span-2 text-primary truncate font-bold">{offer.title}</div>
                   <div className="col-span-2 text-on-surface truncate pr-4 opacity-80">{offer.description}</div>
+                  <div className="col-span-2 flex flex-col">
+                    <span className="text-white font-bold">{offer.discount_amount || 'N/A'}</span>
+                    {offer.discount_code && <span className="text-zinc-500 text-[10px] uppercase">Code: {offer.discount_code}</span>}
+                  </div>
                   
                   <div className="col-span-2 flex justify-end items-center gap-4">
                     <button 

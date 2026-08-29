@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import { supabase } from '../../SupabaseClient';
 import { LogOut, AlertCircle, LayoutDashboard, Ticket, QrCode, Settings, LayoutTemplate, ShoppingBag } from 'lucide-react';
 
@@ -10,9 +11,10 @@ import CmsTab from './components/CmsTab';
 import ProductsTab from './components/ProductsTab';
 
 export default function BrandOwnerDashboard() {
+  const location = useLocation();
   const [session, setSession] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState('analytics');
+  const [activeTab, setActiveTab] = useState(location.state?.activeTab || 'analytics');
   
   // Login State
   const [email, setEmail] = useState('');
@@ -167,7 +169,7 @@ export default function BrandOwnerDashboard() {
     { id: 'cms', label: 'Dashboard CMS', icon: 'dashboard' },
     { id: 'products', label: 'Products', icon: 'inventory_2' },
     { id: 'offers', label: 'Offers', icon: 'local_offer' },
-    { id: 'codes', label: 'QR Matrix', icon: 'qr_code_scanner' },
+    { id: 'codes', label: 'QR Scanner', icon: 'qr_code_scanner' },
     { id: 'settings', label: 'Settings', icon: 'settings' },
   ];
 

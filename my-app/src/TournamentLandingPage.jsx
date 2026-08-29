@@ -170,7 +170,7 @@ function TournamentLandingPage() {
 
           <div className="cta-container">
             <Link to="/arena" className="btn btn-primary">أدخل ساحة XO</Link>
-            <button className="btn btn-primary">تسجيل الدخول / حسابي</button>
+            <Link to="/login" className="btn btn-primary">تسجيل الدخول / حسابي</Link>
           </div>
         </div>
       </div>

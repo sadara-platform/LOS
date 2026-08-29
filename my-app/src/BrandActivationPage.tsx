@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
+import { supabase } from './SupabaseClient';
 import { ShoppingBag, ArrowRight, Instagram, Twitter, ShieldCheck, Sparkles, Search, Plus, Minus, X, Star, Menu, Heart, ChevronRight, Info, Send, Check, TrendingUp, Sliders, Maximize2 } from 'lucide-react';
 
 const MoonIcon = () => (
@@ -43,10 +44,21 @@ interface CartItem {
 
 export default function BrandActivationPage() {
   const { brandId: slug } = useParams();
+  const [searchParams] = useSearchParams();
+  const cardCode = searchParams.get('code');
+  
   const [brandData, setBrandData] = useState<any>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [fetchError, setFetchError] = useState<string | null>(null);
+
+  // Card claiming state
+  const [cardStatus, setCardStatus] = useState<'checking' | 'unused' | 'claimed_by_me' | 'claimed_by_other' | 'none'>('none');
+  const [phone, setPhone] = useState('');
+  const [password, setPassword] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [authError, setAuthError] = useState<string | null>(null);
+  const [claimSuccess, setClaimSuccess] = useState(false);
 
   // Fetch brand data from real backend
   useEffect(() => {
@@ -120,6 +132,91 @@ export default function BrandActivationPage() {
     };
     if (slug) fetchBrandData();
   }, [slug]);
+
+  // Card claiming check
+  useEffect(() => {
+    const checkCardStatus = async () => {
+      if (!cardCode) return;
+      setCardStatus('checking');
+      
+      const { data: sessionData } = await supabase.auth.getSession();
+      const userId = sessionData?.session?.user?.id;
+      
+      const { data: codeData, error } = await supabase.rpc('get_code_brand_slug', { p_code: cardCode });
+      
+      if (error || !codeData?.success) {
+        setCardStatus('none');
+        return;
+      }
+      
+      if (codeData.status === 'unused') {
+        setCardStatus('unused');
+      } else if (codeData.status === 'active') {
+        if (userId && codeData.user_id === userId) {
+          setCardStatus('claimed_by_me');
+        } else {
+          setCardStatus('claimed_by_other');
+        }
+      } else {
+        setCardStatus('none');
+      }
+    };
+    
+    checkCardStatus();
+  }, [cardCode]);
+
+  const handleClaimCard = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!phone || !password || !cardCode) return;
+    
+    setIsSubmitting(true);
+    setAuthError(null);
+    
+    try {
+      const mockEmail = `${phone.trim()}@gmail.com`;
+      
+      // 1. Try to sign in
+      let { data: authData, error: signInError } = await supabase.auth.signInWithPassword({
+        email: mockEmail,
+        password: password,
+      });
+      
+      // 2. If it fails due to invalid credentials, maybe the user doesn't exist. Try to sign up.
+      if (signInError && signInError.message.includes('Invalid login credentials')) {
+        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+          email: mockEmail,
+          password: password,
+        });
+        
+        if (signUpError) {
+          throw new Error('Failed to create account: ' + signUpError.message);
+        }
+        authData = signUpData;
+      } else if (signInError) {
+        throw signInError;
+      }
+      
+      // 3. We are authenticated! Now claim the card securely via RPC
+      const { data: claimData, error: claimError } = await supabase.rpc('claim_card', { p_code: cardCode });
+      
+      if (claimError) {
+        throw new Error('Database error during claim.');
+      }
+      
+      if (!claimData.success) {
+        throw new Error(claimData.error || claimData.message || 'Failed to claim card.');
+      }
+      
+      // Success!
+      setClaimSuccess(true);
+      setCardStatus('claimed_by_me');
+      
+    } catch (err: any) {
+      setAuthError(err.message || 'An error occurred.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
 
   // Application UI states
   const [cart, setCart] = useState<CartItem[]>([]);
@@ -422,24 +519,84 @@ export default function BrandActivationPage() {
               {cmsConfig.heroSubtitle || 'The boundaries of modern streetwear are pure attitude, industrial geometry, and high-performance utility. Discover our new capsule release crafted with heavy fabrics and modular detailing.'}
             </p>
 
-            <div className="pt-4 flex flex-wrap items-center gap-4">
-              <a 
-                href="#shop-now" 
-                className="bg-brand-red text-white text-[13px] font-bold tracking-widest uppercase px-8 py-3.5 rounded-full hover:bg-brand-red/90 hover:shadow-lg hover:shadow-brand-red/25 transition-all flex items-center gap-2"
-              >
-                EXPLORE CAPSULE
-                <ArrowRight className="w-4 h-4" />
-              </a>
-              <button 
-                onClick={() => {
-                  const el = document.getElementById('ai-stylist');
-                  el?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="bg-transparent border border-brand-secondary/40 hover:border-brand-secondary text-brand-light hover:text-brand-secondary text-[13px] font-bold tracking-widest uppercase px-6 py-3.5 rounded-full transition-all flex items-center gap-2"
-              >
-                AI STYLIST CONSULT
-                <Sparkles className="w-3.5 h-3.5" />
-              </button>
+            <div className="pt-4 min-h-[60px]">
+              {cardStatus === 'checking' ? (
+                <div className="flex items-center gap-3 text-brand-muted text-sm font-bold uppercase tracking-widest">
+                  <div className="w-4 h-4 border-2 border-white/20 border-t-brand-red rounded-full animate-spin"></div>
+                  Validating Access Card...
+                </div>
+              ) : cardStatus === 'claimed_by_other' ? (
+                <div className="inline-flex items-center gap-2 bg-brand-red/10 border border-brand-red/30 px-5 py-3 rounded-xl text-brand-red text-sm font-bold tracking-widest uppercase">
+                  <ShieldCheck className="w-5 h-5" />
+                  CARD ALREADY CLAIMED BY ANOTHER USER
+                </div>
+              ) : cardStatus === 'claimed_by_me' || claimSuccess ? (
+                <div className="inline-flex flex-col gap-1">
+                  <div className="inline-flex items-center gap-2 bg-brand-accent/10 border border-brand-accent/30 px-5 py-3 rounded-xl text-brand-accent text-sm font-bold tracking-widest uppercase shadow-[0_0_20px_rgba(255,255,255,0.05)]">
+                    <Check className="w-5 h-5" />
+                    CARD ACTIVE // WELCOME BACK
+                  </div>
+                  <div className="flex flex-wrap items-center gap-4 mt-2">
+                    <a href="#shop-now" className="bg-brand-red text-white text-[12px] font-bold tracking-widest uppercase px-6 py-2.5 rounded-full hover:bg-brand-red/90 transition-all flex items-center gap-2">
+                      EXPLORE CAPSULE
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </a>
+                  </div>
+                </div>
+              ) : cardCode && cardStatus === 'unused' ? (
+                <div className="space-y-3">
+                  <div className="text-xs tracking-widest uppercase font-bold text-brand-light flex items-center gap-2">
+                    <Sparkles className="w-3.5 h-3.5 text-brand-accent" />
+                    Activate Your Card
+                  </div>
+                  <form onSubmit={handleClaimCard} className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+                    <input 
+                      type="tel" 
+                      placeholder="PHONE NUMBER (e.g. 07XXXXXXXXX)" 
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      required
+                      className="bg-brand-charcoal border border-white/10 rounded-xl px-4 py-3 text-sm text-brand-light focus:outline-none focus:border-brand-red placeholder:text-brand-muted/50 tracking-wider font-display sm:w-60"
+                    />
+                    <input 
+                      type="password" 
+                      placeholder="PASSWORD" 
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      className="bg-brand-charcoal border border-white/10 rounded-xl px-4 py-3 text-sm text-brand-light focus:outline-none focus:border-brand-red placeholder:text-brand-muted/50 tracking-wider font-display sm:w-48"
+                    />
+                    <button 
+                      type="submit" 
+                      disabled={isSubmitting}
+                      className="bg-brand-red hover:bg-brand-red/90 text-white rounded-xl px-5 py-3 flex items-center justify-center transition-all disabled:opacity-50"
+                    >
+                      {isSubmitting ? <span className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></span> : <ArrowRight className="w-5 h-5" />}
+                    </button>
+                  </form>
+                  {authError && <div className="text-brand-red text-xs font-bold tracking-wide">{authError}</div>}
+                </div>
+              ) : (
+                <div className="flex flex-wrap items-center gap-4">
+                  <a 
+                    href="#shop-now" 
+                    className="bg-brand-red text-white text-[13px] font-bold tracking-widest uppercase px-8 py-3.5 rounded-full hover:bg-brand-red/90 hover:shadow-lg hover:shadow-brand-red/25 transition-all flex items-center gap-2"
+                  >
+                    EXPLORE CAPSULE
+                    <ArrowRight className="w-4 h-4" />
+                  </a>
+                  <button 
+                    onClick={() => {
+                      const el = document.getElementById('ai-stylist');
+                      el?.scrollIntoView({ behavior: 'smooth' });
+                    }}
+                    className="bg-transparent border border-brand-secondary/40 hover:border-brand-secondary text-brand-light hover:text-brand-secondary text-[13px] font-bold tracking-widest uppercase px-6 py-3.5 rounded-full transition-all flex items-center gap-2"
+                  >
+                    AI STYLIST CONSULT
+                    <Sparkles className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 
