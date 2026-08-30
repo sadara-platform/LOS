@@ -42,6 +42,7 @@ const CardPreview = lazy(() => import('./CardPreview'));
 const PrintCardsPage = lazy(() => import('./PrintCardsPage'));
 const AssignCardsPage = lazy(() => import('./AssignCardsPage'));
 const ActivateCodePage = lazy(() => import('./ActivateCodePage'));
+const AssignOffersPage = lazy(() => import('./AssignOffersPage'));
 
 const PlayerLayout = lazy(() => import('./layouts/PlayerLayout'));
 const ArenaDashboard = lazy(() => import('./pages/ArenaDashboard'));
@@ -87,6 +88,7 @@ function App() {
             <Route path="tournament-control" element={<TournamentController />} />
             <Route path="print-cards" element={<PrintCardsPage />} />
             <Route path="assign-cards" element={<AssignCardsPage />} />
+            <Route path="assign-offers" element={<AssignOffersPage />} />
             <Route path="analytics" element={
               <div className="p-8 text-center text-gray-500">
                 <h2 className="text-2xl font-bold mb-2">Analytics Module</h2>

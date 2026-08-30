@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { supabase } from '../SupabaseClient';
 import { ArrowRight, Lock } from 'lucide-react';
 
@@ -9,15 +9,23 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const code = searchParams.get('code');
 
   useEffect(() => {
     // If already logged in, redirect to app
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (session) {
-        navigate('/app');
+        if (code) {
+          const { data: claimData, error: claimError } = await supabase.rpc('claim_card', { p_code: code });
+          if (claimError || !claimData?.success) {
+            console.error("Failed to automatically claim code for existing session:", claimError || claimData);
+          }
+        }
+        navigate('/app/discounts');
       }
     });
-  }, [navigate]);
+  }, [navigate, code]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -27,21 +35,45 @@ export default function LoginPage() {
     const mockEmail = `${phone.trim()}@gmail.com`;
 
     try {
-      const { data, error: signInError } = await supabase.auth.signInWithPassword({
+      let authSession = null;
+      const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
         email: mockEmail,
         password: password,
       });
 
       if (signInError) {
-        throw signInError;
+        // Attempt to sign up if sign in fails (user might not exist)
+        const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+          email: mockEmail,
+          password: password,
+        });
+
+        if (signUpError) {
+          if (signUpError.message.toLowerCase().includes('already registered')) {
+            throw new Error('Incorrect password. Please try again.');
+          }
+          throw signUpError;
+        }
+        authSession = signUpData.session;
+      } else {
+        authSession = signInData.session;
       }
 
-      if (data.session) {
-        navigate('/app');
+      if (authSession) {
+        if (code) {
+          // If they came with an activation code, claim it securely
+          const { data: claimData, error: claimError } = await supabase.rpc('claim_card', { p_code: code });
+          if (claimError || !claimData?.success) {
+            console.error("Failed to automatically claim code after login:", claimError || claimData);
+          }
+        }
+        navigate('/app/discounts');
+      } else {
+        throw new Error('Failed to establish a session.');
       }
     } catch (err) {
       console.error(err);
-      setError('Invalid phone number or password.');
+      setError(err.message || 'Invalid phone number or password.');
     } finally {
       setLoading(false);
     }

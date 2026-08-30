@@ -187,7 +187,7 @@ export default function PrintCardsPage() {
                     style={{ top: '72.15%', left: '77.19%', width: '13.44%', height: '19.53%' }}
                   >
                     <QRCodeCanvas
-                      value={`https://11los11.netlify.app/activate?code=${item.code}`}
+                      value={`${window.location.origin}/login?code=${item.code}`}
                       style={{ width: '100%', height: '100%' }}
                       level={"H"}
                       includeMargin={false}

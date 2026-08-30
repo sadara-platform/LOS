@@ -38,6 +38,11 @@ const PrintIcon = () => (
     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z" />
   </svg>
 );
+const TicketIcon = () => (
+  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z" />
+  </svg>
+);
 
 export default function AdminLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -59,6 +64,7 @@ export default function AdminLayout() {
     { to: "/admin/tournament-control", icon: <ControlIcon />, label: "Mission Control" },
     { to: "/admin/print-cards", icon: <PrintIcon />, label: "Print Cards" },
     { to: "/admin/assign-cards", icon: <PlusIcon />, label: "Assign Cards" },
+    { to: "/admin/assign-offers", icon: <TicketIcon />, label: "Assign Offers" },
     { to: "/admin/analytics", icon: <ChartIcon />, label: "Analytics" },
   ];
 
